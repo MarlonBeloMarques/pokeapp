@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		37B03EA50C5D4FD09B6EAEF0 /* Pokemon Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */; };
 		5BFEC331BF89135A5177915F /* libPods-PokeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 534038940D79ED4FA8AEBB76 /* libPods-PokeApp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F14E49E4728F08396947416 /* libPods-PokeApp-PokeAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91AFA433A77721827A0B9EA1 /* libPods-PokeApp-PokeAppTests.a */; };
@@ -41,6 +42,7 @@
 		534038940D79ED4FA8AEBB76 /* libPods-PokeApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PokeApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PokeApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		91AFA433A77721827A0B9EA1 /* libPods-PokeApp-PokeAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PokeApp-PokeAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Pokemon Solid.ttf"; path = "../src/assets/fonts/Pokemon Solid.ttf"; sourceTree = "<group>"; };
 		CEACDD16E64158B8CC387DA6 /* Pods-PokeApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PokeApp.debug.xcconfig"; path = "Target Support Files/Pods-PokeApp/Pods-PokeApp.debug.xcconfig"; sourceTree = "<group>"; };
 		CFAC3238EB164A4DF781F6F3 /* Pods-PokeApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PokeApp.release.xcconfig"; path = "Target Support Files/Pods-PokeApp/Pods-PokeApp.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -122,6 +124,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				CAA6E2F29B18CBC3A327985A /* Pods */,
+				CE7500C82CA8488EBEC9FDCD /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +150,15 @@
 			);
 			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		CE7500C82CA8488EBEC9FDCD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +257,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				37B03EA50C5D4FD09B6EAEF0 /* Pokemon Solid.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,12 +9,11 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
-import { Block } from './src/elements';
+import { Block, Text } from './src/elements';
 
 const App = () => (
   <Block center middle>
-    <Text style={{ color: 'white' }}>PokeApp</Text>
+    <Text stylized>PokeApp</Text>
   </Block>
 );
 
