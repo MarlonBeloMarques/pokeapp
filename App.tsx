@@ -9,12 +9,13 @@
  */
 
 import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
+import { Text } from 'react-native';
+import { Block } from './src/elements';
 
 const App = () => (
-  <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  <Block center middle>
     <Text style={{ color: 'white' }}>PokeApp</Text>
-  </SafeAreaView>
+  </Block>
 );
 
 export default App;

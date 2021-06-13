@@ -22,6 +22,7 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint'],
   rules: {
+    'import/prefer-default-export': 'off',
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
     'react/jsx-filename-extension': [
@@ -29,6 +30,7 @@ module.exports = {
       {extensions: ['.js', '.jsx', '.ts', '.tsx']},
     ],
     'no-use-before-define': 'off',
+    'react/prop-types': 'off',
 
     // TypeScript
     '@typescript-eslint/no-non-null-assertion': 'off',
