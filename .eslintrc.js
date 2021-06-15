@@ -5,11 +5,12 @@ module.exports = {
     jest: true,
   },
   extends: [
+    'eslint:recommended',
     'plugin:react/recommended',
     'airbnb',
-    'plugin:import/typescript',
-    'plugin:import/errors',
-    'plugin:import/warnings',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -20,23 +21,21 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {
     'import/prefer-default-export': 'off',
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
-    'react/jsx-filename-extension': [
-      2,
-      {extensions: ['.js', '.jsx', '.ts', '.tsx']},
-    ],
+    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'react/display-name': 'off',
+
     'no-use-before-define': 'off',
     'react/prop-types': 'off',
-
-    // TypeScript
-    '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-unused-expressions': ['error'],
-    '@typescript-eslint/no-use-before-define': ['error'],
+    'prettier/prettier': 'error',
+    'object-curly-newline': 'off',
   },
   settings: {
     'import/resolver': {

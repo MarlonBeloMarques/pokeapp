@@ -29,7 +29,7 @@ interface Props {
   primary?: boolean | undefined;
   secondary?: boolean | undefined;
   apple?: boolean | undefined;
-  google?: boolean | undefined
+  google?: boolean | undefined;
   facebook?: boolean | undefined;
   style?: any | undefined;
   children?: any | undefined;

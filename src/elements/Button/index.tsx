@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  TouchableOpacity,
-} from 'react-native';
+import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 
 import { theme } from '../../constants';
 import { backgroundColors, styles } from './styles';
@@ -14,7 +12,7 @@ interface Props {
   children?: any;
   radius?: number | undefined;
   disableRadiusDefault?: boolean | undefined;
-  onPress?: any | undefined;
+  onPress?: ((event: GestureResponderEvent) => void) | undefined | undefined;
 }
 
 const Button: React.FC<Props> = ({
@@ -28,9 +26,7 @@ const Button: React.FC<Props> = ({
   onPress,
 }) => {
   const buttonStyles = [
-    disableRadiusDefault
-      ? { borderRadius: radius }
-      : { borderRadius: theme.sizes.radius },
+    disableRadiusDefault ? { borderRadius: radius } : { borderRadius: theme.sizes.radius },
     styles.button,
     shadow && styles.shadow,
     color && backgroundColors[color],
@@ -39,11 +35,7 @@ const Button: React.FC<Props> = ({
   ];
 
   return (
-    <TouchableOpacity
-      style={buttonStyles}
-      activeOpacity={opacity || 0.8}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={buttonStyles} activeOpacity={opacity || 0.8} onPress={onPress}>
       {children}
     </TouchableOpacity>
   );

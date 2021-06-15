@@ -7,11 +7,12 @@ const Stack = createStackNavigator();
 
 const Routes = () => (
   <NavigationContainer>
-    <Stack.Navigator screenOptions={{
-      headerTransparent: true,
-      headerBackTitleVisible: false,
-      title: '',
-    }}
+    <Stack.Navigator
+      screenOptions={{
+        headerTransparent: true,
+        headerBackTitleVisible: false,
+        title: '',
+      }}
     >
       <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>

@@ -1,12 +1,11 @@
 import React from 'react';
-import {
-  StyleSheet, View, Animated,
-} from 'react-native';
+import { LayoutChangeEvent, StyleSheet, View, Animated } from 'react-native';
+
 import { backgroundColors, styles } from './styles';
 
 interface Props {
-  margin?: any | undefined;
-  padding?: any | undefined;
+  margin?: number | undefined;
+  padding?: number | undefined;
   flex?: number | boolean | undefined;
   z?: number | undefined;
   row?: boolean | undefined;
@@ -29,8 +28,8 @@ interface Props {
   children?: any | undefined;
   animated?: boolean | undefined;
   key?: string | number | null | undefined;
-  onLayout?: any | undefined;
-  reference?: any | undefined;
+  onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+  reference?: React.RefObject<View> | undefined;
 }
 
 const Block: React.FC<Props> = ({
@@ -187,10 +186,7 @@ const Block: React.FC<Props> = ({
       <Animated.View
         ref={reference}
         key={key}
-        style={[
-          absolute === true ? StyleSheet.absoluteFill : null,
-          blockStyles,
-        ]}
+        style={[absolute === true ? StyleSheet.absoluteFill : null, blockStyles]}
         onLayout={onLayout}
       >
         {children}
