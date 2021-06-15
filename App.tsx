@@ -9,13 +9,12 @@
  */
 
 import React from 'react';
-import { Block, Button, Text } from './src/elements';
+import { Block } from './src/elements';
+import Routes from './src/routes';
 
 const App = () => (
-  <Block middle>
-    <Button>
-      <Text center black stylized>PokeApp</Text>
-    </Button>
+  <Block>
+    <Routes />
   </Block>
 );
 
