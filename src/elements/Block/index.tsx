@@ -4,8 +4,8 @@ import { LayoutChangeEvent, StyleSheet, View, Animated } from 'react-native';
 import { backgroundColors, styles } from './styles';
 
 interface Props {
-  margin?: number | undefined;
-  padding?: number | undefined;
+  margin?: number | Array<number> | undefined;
+  padding?: number | Array<number> | undefined;
   flex?: number | boolean | undefined;
   z?: number | undefined;
   row?: boolean | undefined;

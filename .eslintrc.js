@@ -32,8 +32,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
     'react/display-name': 'off',
-    
-    'implicit-arrow-linebreak': ['error', 'below'],
+
+    'implicit-arrow-linebreak': ['error', 'beside'],
 
     'no-use-before-define': 'off',
     'react/prop-types': 'off',
