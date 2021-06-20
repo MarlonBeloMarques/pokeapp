@@ -1,7 +1,7 @@
 import nock from 'nock';
 
-import pokemonService from '../pokemon-service';
-import pokemonsExpectedData from './fixtures/pokemons';
+import pokemonService from '../../pokemon-service';
+import pokemonsExpectedData from '../fixtures/pokemons';
 
 describe('pokemon service', () => {
   describe('.getAll', () => {
