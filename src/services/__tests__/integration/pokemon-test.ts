@@ -26,8 +26,6 @@ describe('pokemon service', () => {
       // when
       const data = await pokemonService.getAll();
 
-      console.log(data);
-
       // then
       expect(data).toEqual({
         status: expectedHttpStatus,
