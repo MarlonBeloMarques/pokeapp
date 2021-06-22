@@ -25,6 +25,7 @@ interface Props {
   // colors
   color?: keyof typeof colors;
   black?: boolean | undefined;
+  gray?: boolean | undefined;
   white?: boolean | undefined;
   primary?: boolean | undefined;
   secondary?: boolean | undefined;
@@ -56,6 +57,7 @@ const Typography: React.FC<Props> = ({
   height,
   color,
   black,
+  gray,
   white,
   primary,
   secondary,
@@ -89,6 +91,7 @@ const Typography: React.FC<Props> = ({
     color && !colors[color] && { color },
     // color shortcuts
     black && colors.black,
+    gray && colors.gray,
     white && colors.white,
     primary && colors.primary,
     secondary && colors.secondary,

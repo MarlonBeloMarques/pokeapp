@@ -9,11 +9,10 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* PokeAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PokeAppTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		37B03EA50C5D4FD09B6EAEF0 /* Pokemon Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */; };
+		5475E39F26821C6600CE0DD5 /* Pokemon Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */; };
+		5475E43E268221C400CE0DD5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		5BFEC331BF89135A5177915F /* libPods-PokeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 534038940D79ED4FA8AEBB76 /* libPods-PokeApp.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9F14E49E4728F08396947416 /* libPods-PokeApp-PokeAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91AFA433A77721827A0B9EA1 /* libPods-PokeApp-PokeAppTests.a */; };
 /* End PBXBuildFile section */
 
@@ -40,9 +39,25 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = PokeApp/main.m; sourceTree = "<group>"; };
 		4A52435EF3877D1D05680D5D /* Pods-PokeApp-PokeAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PokeApp-PokeAppTests.release.xcconfig"; path = "Target Support Files/Pods-PokeApp-PokeAppTests/Pods-PokeApp-PokeAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		534038940D79ED4FA8AEBB76 /* libPods-PokeApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PokeApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		54F7529726821092008C38D8 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		54F7529826821092008C38D8 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		54F7529926821092008C38D8 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		54F7529A26821092008C38D8 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		54F7529B26821092008C38D8 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		54F7529C26821092008C38D8 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		54F7529D26821093008C38D8 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		54F7529E26821093008C38D8 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		54F7529F26821093008C38D8 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		54F752A026821093008C38D8 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		54F752A126821093008C38D8 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		54F752A226821093008C38D8 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		54F752A326821093008C38D8 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		54F752A426821093008C38D8 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		54F752A526821093008C38D8 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		54F752A626821093008C38D8 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PokeApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		91AFA433A77721827A0B9EA1 /* libPods-PokeApp-PokeAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PokeApp-PokeAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Pokemon Solid.ttf"; path = "../src/assets/fonts/Pokemon Solid.ttf"; sourceTree = "<group>"; };
+		983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pokemon Solid.ttf"; path = "../src/assets/fonts/Pokemon Solid.ttf"; sourceTree = "<group>"; };
 		CEACDD16E64158B8CC387DA6 /* Pods-PokeApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PokeApp.debug.xcconfig"; path = "Target Support Files/Pods-PokeApp/Pods-PokeApp.debug.xcconfig"; sourceTree = "<group>"; };
 		CFAC3238EB164A4DF781F6F3 /* Pods-PokeApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PokeApp.release.xcconfig"; path = "Target Support Files/Pods-PokeApp/Pods-PokeApp.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -88,6 +103,7 @@
 		13B07FAE1A68108700A75B9A /* PokeApp */ = {
 			isa = PBXGroup;
 			children = (
+				54F7529626821013008C38D8 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -106,6 +122,29 @@
 				91AFA433A77721827A0B9EA1 /* libPods-PokeApp-PokeAppTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		54F7529626821013008C38D8 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				54F752A326821093008C38D8 /* AntDesign.ttf */,
+				54F752A026821093008C38D8 /* Entypo.ttf */,
+				54F7529826821092008C38D8 /* EvilIcons.ttf */,
+				54F7529A26821092008C38D8 /* Feather.ttf */,
+				54F752A226821093008C38D8 /* FontAwesome.ttf */,
+				54F752A426821093008C38D8 /* FontAwesome5_Brands.ttf */,
+				54F7529B26821092008C38D8 /* FontAwesome5_Regular.ttf */,
+				54F7529E26821093008C38D8 /* FontAwesome5_Solid.ttf */,
+				54F7529726821092008C38D8 /* Fontisto.ttf */,
+				54F752A126821093008C38D8 /* Foundation.ttf */,
+				54F7529F26821093008C38D8 /* Ionicons.ttf */,
+				54F7529D26821093008C38D8 /* MaterialCommunityIcons.ttf */,
+				54F752A626821093008C38D8 /* MaterialIcons.ttf */,
+				54F7529926821092008C38D8 /* Octicons.ttf */,
+				54F752A526821093008C38D8 /* SimpleLineIcons.ttf */,
+				54F7529C26821092008C38D8 /* Zocial.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -148,7 +187,6 @@
 				004AD384D4C97945067A6CE8 /* Pods-PokeApp-PokeAppTests.debug.xcconfig */,
 				4A52435EF3877D1D05680D5D /* Pods-PokeApp-PokeAppTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -158,7 +196,6 @@
 				983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -255,9 +292,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				37B03EA50C5D4FD09B6EAEF0 /* Pokemon Solid.ttf in Resources */,
+				5475E43E268221C400CE0DD5 /* LaunchScreen.storyboard in Resources */,
+				5475E39F26821C6600CE0DD5 /* Pokemon Solid.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

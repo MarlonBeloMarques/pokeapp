@@ -6,6 +6,7 @@ export const colors = StyleSheet.create({
   secondary: { color: theme.colors.secondary },
   white: { color: theme.colors.white },
   black: { color: theme.colors.black },
+  gray: { color: theme.colors.gray },
   apple: { color: theme.colors.apple },
   facebook: { color: theme.colors.facebook },
   google: { color: theme.colors.google },

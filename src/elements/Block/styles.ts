@@ -6,6 +6,7 @@ export const backgroundColors = StyleSheet.create({
   secondary: { backgroundColor: theme.colors.secondary },
   white: { backgroundColor: theme.colors.white },
   black: { backgroundColor: theme.colors.black },
+  gray: { backgroundColor: theme.colors.gray },
   apple: { backgroundColor: theme.colors.apple },
   facebook: { backgroundColor: theme.colors.facebook },
   google: { backgroundColor: theme.colors.google },
