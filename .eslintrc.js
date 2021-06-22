@@ -33,9 +33,10 @@ module.exports = {
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     'react/display-name': 'off',
-
+    
     'implicit-arrow-linebreak': 'off',
-
+    
+    'no-await-in-loop': 'off',
     'no-use-before-define': 'off',
     'react/prop-types': 'off',
     'prettier/prettier': 'error',

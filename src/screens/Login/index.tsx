@@ -6,27 +6,47 @@ import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
+import '../../../config/Reactotron';
 
 const wdith = Dimensions.get('screen').width;
+const minutes = 30000;
 
 const Login: React.FC = () => {
   const [color, setColor] = useState<IOSImageColors | AndroidImageColors>();
+  const [urlImage, setUrlImage] = useState('');
 
   useEffect(() => {
-    const getImageColors = async (): Promise<void> => {
-      const colors = await ImageColors.getColors(getPokemonImage(), {
-        cache: true,
-      });
+    const showImages = async (): Promise<void> => {
+      getImageColors();
+      setUrlImage(getPokemonImage());
 
-      if (colors.platform === 'ios') {
-        setColor(colors);
-      } else {
-        setColor(colors);
+      for (let pokemonId = 2; pokemonId <= 5; pokemonId += 1) {
+        await timeout();
+
+        getImageColors(pokemonId);
+        setUrlImage(getPokemonImage(pokemonId));
+
+        if (pokemonId === 5) {
+          pokemonId = 0;
+        }
       }
     };
 
-    getImageColors();
+    showImages();
   }, []);
+
+  const timeout = () => new Promise((resolve) => setTimeout(resolve, minutes));
+  const getImageColors = async (pokemonId?: number): Promise<void> => {
+    const colors = await ImageColors.getColors(getPokemonImage(pokemonId), {
+      cache: true,
+    });
+
+    if (colors.platform === 'ios') {
+      setColor(colors);
+    } else {
+      setColor(colors);
+    }
+  };
 
   const getPokemonImage = (pokemonId = 1) =>
     `https://pokeres.bastionbot.org/images/pokemon/${pokemonId}.png`;
@@ -60,7 +80,7 @@ const Login: React.FC = () => {
           </Text>
         </Block>
         <Block middle center>
-          <Photo source={getPokemonImage()} width={180} height={180} />
+          <Photo source={urlImage} width={180} height={180} />
         </Block>
         <Button color="apple">
           <Block row center space="evenly">
