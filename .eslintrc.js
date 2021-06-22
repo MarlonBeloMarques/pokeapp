@@ -31,9 +31,10 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
     'react/display-name': 'off',
 
-    'implicit-arrow-linebreak': ['error', 'beside'],
+    'implicit-arrow-linebreak': 'off',
 
     'no-use-before-define': 'off',
     'react/prop-types': 'off',
@@ -42,6 +43,9 @@ module.exports = {
   },
   settings: {
     'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true
+      },
       node: {
         paths: ['./src'],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],

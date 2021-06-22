@@ -9,9 +9,7 @@ declare global {
 }
 
 if (process.env.NODE_ENV === 'development') {
-  const tron = Reactotron.configure()
-    .setAsyncStorageHandler!(AsyncStorage)
-    .connect();
+  const tron = Reactotron.configure().setAsyncStorageHandler!(AsyncStorage).connect();
 
   tron.clear!();
 
