@@ -7,6 +7,7 @@ import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/li
 import { POKEAPI_IMAGE_URL } from '@env';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
+import { Title } from '../../components';
 import '../../../config/Reactotron';
 
 const wdith = Dimensions.get('screen').width;
@@ -77,9 +78,7 @@ const Login: React.FC = () => {
     >
       <Block padding={theme.sizes.padding}>
         <Block flex={false} padding={[theme.sizes.padding * 2, 0]}>
-          <Text h1 stylized>
-            PokeApp
-          </Text>
+          <Title />
         </Block>
         <Block middle center>
           <Photo source={urlImage} width={180} height={180} />
