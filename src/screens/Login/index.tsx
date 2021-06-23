@@ -4,6 +4,7 @@ import RadialGradient from 'react-native-radial-gradient';
 import { Dimensions } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
+import { POKEAPI_IMAGE_URL } from '@env';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
 import '../../../config/Reactotron';
@@ -14,6 +15,8 @@ const minutes = 30000;
 const Login: React.FC = () => {
   const [color, setColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
+
+  console.tron.log(POKEAPI_IMAGE_URL);
 
   useEffect(() => {
     const showImages = async (): Promise<void> => {
@@ -48,8 +51,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const getPokemonImage = (pokemonId = 1) =>
-    `https://pokeres.bastionbot.org/images/pokemon/${pokemonId}.png`;
+  const getPokemonImage = (pokemonId = 1) => `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
 
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
