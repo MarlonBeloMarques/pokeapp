@@ -4,31 +4,32 @@ import RadialGradient from 'react-native-radial-gradient';
 import { Dimensions } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
-import { POKEAPI_IMAGE_URL } from '@env';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
 import { Title } from '../../components';
 import '../../../config/Reactotron';
 
-const wdith = Dimensions.get('screen').width;
+const { width } = Dimensions.get('screen');
 const minutes = 30000;
 
-const Login: React.FC = () => {
+interface Props {
+  pokemons: Array<{ id: number; image: string }>;
+}
+
+const Login: React.FC<Props> = ({ pokemons }) => {
   const [color, setColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
 
-  console.tron.log(POKEAPI_IMAGE_URL);
-
   useEffect(() => {
     const showImages = async (): Promise<void> => {
-      getImageColors();
-      setUrlImage(getPokemonImage());
+      getImageColors(pokemons[0].id);
+      setUrlImage(pokemons[0].image);
 
       for (let pokemonId = 2; pokemonId <= 5; pokemonId += 1) {
         await timeout();
 
         getImageColors(pokemonId);
-        setUrlImage(getPokemonImage(pokemonId));
+        setUrlImage(pokemons[pokemonId].image);
 
         if (pokemonId === 5) {
           pokemonId = 0;
@@ -40,10 +41,14 @@ const Login: React.FC = () => {
   }, []);
 
   const timeout = () => new Promise((resolve) => setTimeout(resolve, minutes));
-  const getImageColors = async (pokemonId?: number): Promise<void> => {
-    const colors = await ImageColors.getColors(getPokemonImage(pokemonId), {
-      cache: true,
-    });
+
+  const getImageColors = async (pokemonId: number): Promise<void> => {
+    const colors = await ImageColors.getColors(
+      pokemons.filter((pokemon) => pokemon.id === pokemonId)[0].image,
+      {
+        cache: true,
+      },
+    );
 
     if (colors.platform === 'ios') {
       setColor(colors);
@@ -51,8 +56,6 @@ const Login: React.FC = () => {
       setColor(colors);
     }
   };
-
-  const getPokemonImage = (pokemonId = 1) => `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
 
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
@@ -73,7 +76,7 @@ const Login: React.FC = () => {
       style={{ flex: 1 }}
       colors={getBackgroundColors(color)}
       stops={[0.1, 0.8, 0.3, 0.75]}
-      center={[wdith, 250]}
+      center={[width, 250]}
       radius={600}
     >
       <Block padding={theme.sizes.padding}>
@@ -81,7 +84,11 @@ const Login: React.FC = () => {
           <Title />
         </Block>
         <Block middle center>
-          <Photo source={urlImage} width={180} height={180} />
+          <Photo
+            source={urlImage}
+            resizeMode="contain"
+            style={{ maxWidth: width / 1.2, flex: 1 }}
+          />
         </Block>
         <Button color="apple">
           <Block row center space="evenly">
@@ -110,6 +117,27 @@ const Login: React.FC = () => {
       </Block>
     </RadialGradient>
   );
+};
+
+Login.defaultProps = {
+  pokemons: [
+    {
+      id: 1,
+      image: require('../../assets/images/pokemon_1.png'),
+    },
+    {
+      id: 2,
+      image: require('../../assets/images/pokemon_2.png'),
+    },
+    {
+      id: 3,
+      image: require('../../assets/images/pokemon_3.png'),
+    },
+    {
+      id: 4,
+      image: require('../../assets/images/pokemon_4.png'),
+    },
+  ],
 };
 
 export default Login;

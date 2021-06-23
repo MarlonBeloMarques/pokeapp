@@ -1,9 +1,10 @@
 import React from 'react';
 import styles from './styles';
 import { Text } from '../../elements';
+import { theme } from '../../constants';
 
 const Title: React.FC = () => (
-  <Text style={styles.title} h1 stylized>
+  <Text style={styles.title} stylized>
     PokeApp
   </Text>
 );
