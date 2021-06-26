@@ -5,6 +5,7 @@ import { Dimensions } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { darken } from 'polished';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
 import { Title } from '../../components';
@@ -64,13 +65,13 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
   ): Array<string | undefined> => {
     if (colorImage !== undefined) {
       if (colorImage.platform === 'ios') {
-        return [colorImage.background, colorImage.detail];
+        return [colorImage.background, darken(0.3, colorImage.background)];
       }
 
-      return [colorImage.average, colorImage.vibrant];
+      return [colorImage.average, darken(0.3, colorImage.average)];
     }
 
-    return ['#FFE274', '#FFCB05'];
+    return ['#FFE274', darken(0.3, '#FFE274')];
   };
 
   return (

@@ -41,6 +41,7 @@ module.exports = {
     'react/prop-types': 'off',
     'prettier/prettier': 'error',
     'object-curly-newline': 'off',
+    'global-require': 'off',
   },
   settings: {
     'import/resolver': {
