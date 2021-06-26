@@ -4,19 +4,21 @@ import RadialGradient from 'react-native-radial-gradient';
 import { Dimensions } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
 import { Title } from '../../components';
 import '../../../config/Reactotron';
 
 const { width } = Dimensions.get('screen');
-const minutes = 30000;
+const minutes = 10000;
 
 interface Props {
   pokemons: Array<{ id: number; image: string }>;
+  navigation: StackNavigationProp<any, any>;
 }
 
-const Login: React.FC<Props> = ({ pokemons }) => {
+const Login: React.FC<Props> = ({ pokemons, navigation }) => {
   const [color, setColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
 
@@ -25,14 +27,14 @@ const Login: React.FC<Props> = ({ pokemons }) => {
       getImageColors(pokemons[0].id);
       setUrlImage(pokemons[0].image);
 
-      for (let pokemonId = 2; pokemonId <= 5; pokemonId += 1) {
+      for (let cont = 0; cont <= 3; cont += 1) {
         await timeout();
 
-        getImageColors(pokemonId);
-        setUrlImage(pokemons[pokemonId].image);
+        getImageColors(pokemons[cont].id);
+        setUrlImage(pokemons[cont].image);
 
-        if (pokemonId === 5) {
-          pokemonId = 0;
+        if (cont === 3) {
+          cont = -1;
         }
       }
     };
@@ -90,7 +92,7 @@ const Login: React.FC<Props> = ({ pokemons }) => {
             style={{ maxWidth: width / 1.2, flex: 1 }}
           />
         </Block>
-        <Button color="apple">
+        <Button color="apple" onPress={() => navigation.navigate('Home')}>
           <Block row center space="evenly">
             <Icon name="apple1" color={theme.colors.white} size={22} />
             <Text center bold>
@@ -98,7 +100,7 @@ const Login: React.FC<Props> = ({ pokemons }) => {
             </Text>
           </Block>
         </Button>
-        <Button color="google">
+        <Button color="google" onPress={() => navigation.navigate('Home')}>
           <Block row center space="evenly">
             <Icon name="google" color={theme.colors.gray} size={22} />
             <Text center gray bold>
@@ -106,7 +108,7 @@ const Login: React.FC<Props> = ({ pokemons }) => {
             </Text>
           </Block>
         </Button>
-        <Button color="facebook">
+        <Button color="facebook" onPress={() => navigation.navigate('Home')}>
           <Block row center space="evenly">
             <Icon name="facebook-square" color={theme.colors.white} size={22} />
             <Text center bold>
