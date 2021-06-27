@@ -9,6 +9,5 @@ export default StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 0.1,
     elevation: 3,
-    fontSize: theme.sizes.h1 * 1.4,
   },
 });
