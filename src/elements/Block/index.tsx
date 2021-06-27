@@ -155,7 +155,7 @@ const Block: React.FC<Props> = ({
   }
 
   const blockStyles = [
-    styles.block,
+    !style && styles.block,
     width && { width },
     height && { height },
     absolute && { position: 'absolute' },
