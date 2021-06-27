@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RadialGradient from 'react-native-radial-gradient';
-import { Dimensions } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -11,7 +11,7 @@ import { Block, Button, Photo, Text } from '../../elements';
 import { Title } from '../../components';
 import '../../../config/Reactotron';
 
-const { width } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 const minutes = 10000;
 
 interface Props {
@@ -20,32 +20,60 @@ interface Props {
 }
 
 const Login: React.FC<Props> = ({ pokemons, navigation }) => {
-  const [color, setColor] = useState<IOSImageColors | AndroidImageColors>();
+  const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
+  const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
+  const [loadingProgress] = useState(new Animated.Value(0));
+  const [opacityProgress] = useState(new Animated.Value(0));
+  const [loadingFinished, setLoadingFinished] = useState(false);
 
   useEffect(() => {
     const showImages = async (): Promise<void> => {
-      getImageColors(pokemons[0].id);
+      getImageColors(pokemons[0].id, setCurrentColor);
       setUrlImage(pokemons[0].image);
 
-      for (let cont = 0; cont <= 3; cont += 1) {
+      for (let cont = 1; cont <= 3; cont += 1) {
+        runsAnimations();
         await timeout();
 
-        getImageColors(pokemons[cont].id);
+        getImageColors(pokemons[cont === 0 ? 3 : cont - 1].id, setPreviousColor);
+        getImageColors(pokemons[cont].id, setCurrentColor);
         setUrlImage(pokemons[cont].image);
 
         if (cont === 3) {
           cont = -1;
         }
+
+        setLoadingFinished(false);
+        loadingProgress.setValue(0);
+        opacityProgress.setValue(0);
       }
     };
 
     showImages();
   }, []);
 
+  const runsAnimations = (): void => {
+    Animated.timing(loadingProgress, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: false,
+    }).start(() => {
+      setLoadingFinished(true);
+      Animated.timing(opacityProgress, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: false,
+      }).start();
+    });
+  };
+
   const timeout = () => new Promise((resolve) => setTimeout(resolve, minutes));
 
-  const getImageColors = async (pokemonId: number): Promise<void> => {
+  const getImageColors = async (
+    pokemonId: number,
+    colorChange: React.Dispatch<React.SetStateAction<any>>,
+  ): Promise<void> => {
     const colors = await ImageColors.getColors(
       pokemons.filter((pokemon) => pokemon.id === pokemonId)[0].image,
       {
@@ -54,9 +82,9 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
     );
 
     if (colors.platform === 'ios') {
-      setColor(colors);
+      colorChange(colors);
     } else {
-      setColor(colors);
+      colorChange(colors);
     }
   };
 
@@ -74,49 +102,114 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
     return ['#FFE274', darken(0.3, '#FFE274')];
   };
 
+  const socialButtons = (): React.ReactElement => (
+    <Block
+      z={10}
+      absolute
+      height={height / 2.6}
+      width={width}
+      padding={theme.sizes.padding}
+      style={{ justifyContent: 'flex-end', bottom: 0 }}
+    >
+      <Button color="apple" onPress={() => navigation.navigate('Home')}>
+        <Block row center space="evenly">
+          <Icon name="apple1" color={theme.colors.white} size={22} />
+          <Text center bold>
+            Sign in with Apple
+          </Text>
+        </Block>
+      </Button>
+      <Button color="google" onPress={() => navigation.navigate('Home')}>
+        <Block row center space="evenly">
+          <Icon name="google" color={theme.colors.gray} size={22} />
+          <Text center gray bold>
+            Sign in with Google
+          </Text>
+        </Block>
+      </Button>
+      <Button color="facebook" onPress={() => navigation.navigate('Home')}>
+        <Block row center space="evenly">
+          <Icon name="facebook-square" color={theme.colors.white} size={22} />
+          <Text center bold>
+            Sign in with Facebook
+          </Text>
+        </Block>
+      </Button>
+    </Block>
+  );
+
   return (
     <RadialGradient
       style={{ flex: 1 }}
-      colors={getBackgroundColors(color)}
+      colors={getBackgroundColors(previousColor)}
       stops={[0.1, 0.8, 0.3, 0.75]}
       center={[width, 250]}
       radius={600}
     >
-      <Block padding={theme.sizes.padding}>
-        <Block flex={false} padding={[theme.sizes.padding * 2, 0]}>
-          <Title />
+      <Block middle center>
+        <Block
+          z={10}
+          absolute
+          width={width}
+          height={height / 4}
+          padding={theme.sizes.padding}
+          style={{ top: 0 }}
+        >
+          <Block flex={false} padding={[theme.sizes.padding * 2, 0]}>
+            <Title />
+          </Block>
         </Block>
-        <Block middle center>
+        <Block z={10} absolute middle center>
           <Photo
             source={urlImage}
             resizeMode="contain"
             style={{ maxWidth: width / 1.2, flex: 1 }}
           />
         </Block>
-        <Button color="apple" onPress={() => navigation.navigate('Home')}>
-          <Block row center space="evenly">
-            <Icon name="apple1" color={theme.colors.white} size={22} />
-            <Text center bold>
-              Sign in with Apple
-            </Text>
-          </Block>
-        </Button>
-        <Button color="google" onPress={() => navigation.navigate('Home')}>
-          <Block row center space="evenly">
-            <Icon name="google" color={theme.colors.gray} size={22} />
-            <Text center gray bold>
-              Sign in with Google
-            </Text>
-          </Block>
-        </Button>
-        <Button color="facebook" onPress={() => navigation.navigate('Home')}>
-          <Block row center space="evenly">
-            <Icon name="facebook-square" color={theme.colors.white} size={22} />
-            <Text center bold>
-              Sign in with Facebook
-            </Text>
-          </Block>
-        </Button>
+        <Block
+          animated
+          flex={false}
+          style={{
+            backgroundColor: getBackgroundColors(currentColor)[1],
+            borderRadius: loadingProgress.interpolate({
+              inputRange: [0, 0.4, 0.8, 1],
+              outputRange: [100, 200, 300, 0],
+            }),
+            width: loadingProgress.interpolate({
+              inputRange: [0, 0.8, 1],
+              outputRange: [0, height, width],
+            }),
+            height: loadingProgress.interpolate({
+              inputRange: [0, 0.8, 1],
+              outputRange: [0, height, height],
+            }),
+          }}
+        >
+          {loadingFinished && (
+            <>
+              <Block
+                z={2}
+                animated
+                absolute
+                style={{
+                  backgroundColor: getBackgroundColors(currentColor)[1],
+                  opacity: opacityProgress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+                }}
+              />
+              <RadialGradient
+                style={{ flex: 1, zIndex: 1 }}
+                colors={getBackgroundColors(currentColor)}
+                stops={[0.1, 0.8, 0.3, 0.75]}
+                center={[width, 250]}
+                radius={600}
+              />
+            </>
+          )}
+        </Block>
+        {socialButtons()}
       </Block>
     </RadialGradient>
   );
