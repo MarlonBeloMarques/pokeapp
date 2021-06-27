@@ -27,7 +27,7 @@ const Button: React.FC<Props> = ({
 }) => {
   const buttonStyles = [
     disableRadiusDefault ? { borderRadius: radius } : { borderRadius: theme.sizes.radius },
-    styles.button,
+    !style && styles.button,
     shadow && styles.shadow,
     color && backgroundColors[color],
     color && !backgroundColors[color] && { backgroundColor: color },
