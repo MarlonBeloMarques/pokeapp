@@ -1,7 +1,7 @@
 import axios from 'axios';
 import api from './api';
 import Pokemon from './pokemon';
-import Pokemons from './pokemons';
+import { Pokemons } from './pokemons';
 
 interface ExceptionError {
   status: number | undefined;

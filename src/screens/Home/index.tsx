@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
@@ -7,8 +7,18 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import { Block, Button, Photo, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
+import '../../../config/Reactotron';
+
+import pokemonService from '../../services/pokemon-service';
+import { Pokemons, Result } from '../../services/pokemons';
+import PokemonDetail from '../../services/pokemon';
 
 const { width, height } = Dimensions.get('screen');
+
+interface PokemonProps extends Result {
+  image_url: string;
+  detail: PokemonDetail;
+}
 
 const Home: React.FC = () => {
   const headerHeight = useHeaderHeight();
@@ -16,6 +26,40 @@ const Home: React.FC = () => {
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
+
+  const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
+
+  useEffect(() => {
+    getPokemons();
+  }, []);
+
+  const getPokemons = async (): Promise<void> => {
+    try {
+      const pokemons: Pokemons = await pokemonService.getAll(1, 20).then();
+
+      for (let cont = 0; cont < pokemons.results.length; cont + 1) {
+        const pokemonDetail: PokemonDetail = await pokemonService
+          .get(parseInt(getId(pokemons.results[cont]), 10))
+          .then();
+
+        setPokemonsList((pokemon) => [
+          ...pokemon,
+          {
+            name: pokemons.results[cont].name,
+            url: pokemons.results[cont].url,
+            detail: pokemonDetail,
+            image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+          },
+        ]);
+
+        cont += 1;
+      }
+    } catch (error) {}
+  };
+
+  const getId = (result: Result): string => result.url.split('/')[6];
+  const getImageUrl = (pokemonId: number): string =>
+    `https://pokeres.bastionbot.org/images/pokemon/${pokemonId}.png`;
 
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
