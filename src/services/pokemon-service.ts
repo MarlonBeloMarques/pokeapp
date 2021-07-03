@@ -1,3 +1,4 @@
+import { POKEAPI_URL } from '@env';
 import axios from 'axios';
 import api from './api';
 import Pokemon from './pokemon';
@@ -8,9 +9,9 @@ interface ExceptionError {
   error: any | undefined;
 }
 
-const getAll = async (offset = 0, limit = 20): Promise<Pokemons | ExceptionError | undefined> => {
+const getAll = async (url = POKEAPI_URL, offset = 0, limit = 20): Promise<Pokemons | ExceptionError | undefined> => {
   try {
-    const { data } = await api.get<Pokemons>(`/pokemons?offset=${offset}&limit=${limit}`);
+    const { data } = await api(url).get<Pokemons>(`/pokemon?offset=${offset}&limit=${limit}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -23,9 +24,9 @@ const getAll = async (offset = 0, limit = 20): Promise<Pokemons | ExceptionError
   }
 };
 
-const get = async (id: number): Promise<Pokemon | ExceptionError | undefined> => {
+const get = async (url = POKEAPI_URL, id: number): Promise<Pokemon | ExceptionError | undefined> => {
   try {
-    const { data } = await api.get<Pokemon>(`/pokemons/${id}`);
+    const { data } = await api(url).get<Pokemon>(`/pokemon/${id}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

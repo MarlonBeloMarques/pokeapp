@@ -5,9 +5,10 @@
   "scripts": {
     "postinstall": "npx jetify",
     "prepush": "lint-staged",
-    "android": "adb reverse tcp:9090 tcp:9090 && APP_ENV=dev && npx react-native run-android",
-    "ios": "npx pod-install && APP_ENV=dev && npx react-native run-ios",
-    "start": "npx react-native start --reset-cache",
+    "android": "adb reverse tcp:9090 tcp:9090 && npx react-native run-android",
+    "ios": "npx pod-install && npx react-native run-ios",
+    "start": "NODE_ENV=development && npx react-native start --reset-cache",
+    "start:prod": "NODE_ENV=production && npx react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
@@ -47,6 +48,7 @@
     "babel-plugin-root-import": "^6.6.0",
     "eslint": "^7.28.0",
     "eslint-config-airbnb": "^18.2.1",
+    "eslint-import-resolver-babel-module": "^5.3.1",
     "eslint-import-resolver-babel-plugin-root-import": "^1.1.1",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.23.4",

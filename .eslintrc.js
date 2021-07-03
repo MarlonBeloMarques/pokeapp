@@ -11,6 +11,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'eslint-import-resolver-babel-module',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -33,9 +34,9 @@ module.exports = {
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     'react/display-name': 'off',
-    
+
     'implicit-arrow-linebreak': 'off',
-    
+
     'no-await-in-loop': 'off',
     'no-use-before-define': 'off',
     'react/prop-types': 'off',
@@ -46,7 +47,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       typescript: {
-        alwaysTryTypes: true
+        alwaysTryTypes: true,
       },
       node: {
         paths: ['./src'],

@@ -9,10 +9,10 @@ describe('pokemon service', () => {
     it('returns paged data from endpoint pokemon api', async () => {
       // given
       nock('http://mock-api.com.br')
-        .get(`/pokemons?offset=${0}&limit=${20}`)
+        .get(`/pokemon?offset=${0}&limit=${20}`)
         .reply(200, pokemonsExpectedData);
       // when
-      const data = await pokemonService.getAll();
+      const data = await pokemonService.getAll('http://mock-api.com.br', 0, 20);
       // then
       expect(data).toEqual(pokemonsExpectedData);
     });
@@ -22,10 +22,10 @@ describe('pokemon service', () => {
       const expectedError = { message: 'Not Found' };
       const expectedHttpStatus = 404;
       nock('http://mock-api.com.br')
-        .get(`/pokemons?offset=${0}&limit=${20}`)
+        .get(`/pokemon?offset=${0}&limit=${20}`)
         .reply(expectedHttpStatus, expectedError);
       // when
-      const data = await pokemonService.getAll();
+      const data = await pokemonService.getAll('http://mock-api.com.br', 0, 20);
 
       // then
       expect(data).toEqual({
@@ -38,9 +38,9 @@ describe('pokemon service', () => {
   describe('.get', () => {
     it('returns pokemon data via api', async () => {
       // given
-      nock('http://mock-api.com.br').get(`/pokemons/${1}`).reply(200, pokemonExpectedData);
+      nock('http://mock-api.com.br').get(`/pokemon/${1}`).reply(200, pokemonExpectedData);
       // when
-      const data = await pokemonService.get(1);
+      const data = await pokemonService.get('http://mock-api.com.br', 1);
       // then
       expect(data).toEqual(pokemonExpectedData);
     });
@@ -49,9 +49,9 @@ describe('pokemon service', () => {
       // given
       const expectedError = { message: 'Not Found' };
       const expectedHttpStatus = 404;
-      nock('http://mock-api.com.br').get(`/pokemons/${1}`).reply(expectedHttpStatus, expectedError);
+      nock('http://mock-api.com.br').get(`/pokemon/${1}`).reply(expectedHttpStatus, expectedError);
       // when
-      const data = await pokemonService.get(1);
+      const data = await pokemonService.get('http://mock-api.com.br',1);
       // then
       expect(data).toEqual({
         status: expectedHttpStatus,

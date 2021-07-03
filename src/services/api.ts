@@ -1,7 +1,8 @@
+import { POKEAPI_URL } from '@env';
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://mock-api.com.br',
+const api = (url = POKEAPI_URL) => axios.create({
+  baseURL: url,
 });
 
 export default api;

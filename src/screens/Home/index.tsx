@@ -4,10 +4,10 @@ import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
 import { Dimensions } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/stack';
+import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import { Block, Button, Photo, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
-import '../../../config/Reactotron';
 
 import pokemonService from '../../services/pokemon-service';
 import { Pokemons, Result } from '../../services/pokemons';
@@ -35,11 +35,11 @@ const Home: React.FC = () => {
 
   const getPokemons = async (): Promise<void> => {
     try {
-      const pokemons: Pokemons = await pokemonService.getAll(1, 20).then();
+      const pokemons: Pokemons = await pokemonService.getAll(POKEAPI_URL,1, 20).then();
 
       for (let cont = 0; cont < pokemons.results.length; cont + 1) {
         const pokemonDetail: PokemonDetail = await pokemonService
-          .get(parseInt(getId(pokemons.results[cont]), 10))
+          .get(POKEAPI_URL,parseInt(getId(pokemons.results[cont]), 10))
           .then();
 
         setPokemonsList((pokemon) => [
@@ -59,7 +59,7 @@ const Home: React.FC = () => {
 
   const getId = (result: Result): string => result.url.split('/')[6];
   const getImageUrl = (pokemonId: number): string =>
-    `https://pokeres.bastionbot.org/images/pokemon/${pokemonId}.png`;
+    `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
 
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
