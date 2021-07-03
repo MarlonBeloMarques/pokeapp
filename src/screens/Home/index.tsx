@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
-import { Dimensions } from 'react-native';
+import { Dimensions, FlatList } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import { Block, Button, Photo, Text } from '../../elements';
@@ -29,17 +29,19 @@ const Home: React.FC = () => {
 
   const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
 
+  const flatListRef = useRef<FlatList<any>>(null);
+
   useEffect(() => {
     getPokemons();
   }, []);
 
   const getPokemons = async (): Promise<void> => {
     try {
-      const pokemons: Pokemons = await pokemonService.getAll(POKEAPI_URL,1, 20).then();
+      const pokemons: Pokemons = await pokemonService.getAll(POKEAPI_URL, 1, 20).then();
 
       for (let cont = 0; cont < pokemons.results.length; cont + 1) {
         const pokemonDetail: PokemonDetail = await pokemonService
-          .get(POKEAPI_URL,parseInt(getId(pokemons.results[cont]), 10))
+          .get(POKEAPI_URL, parseInt(getId(pokemons.results[cont]), 10))
           .then();
 
         setPokemonsList((pokemon) => [
@@ -58,8 +60,7 @@ const Home: React.FC = () => {
   };
 
   const getId = (result: Result): string => result.url.split('/')[6];
-  const getImageUrl = (pokemonId: number): string =>
-    `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
+  const getImageUrl = (pokemonId: number): string => `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
 
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
@@ -125,13 +126,26 @@ const Home: React.FC = () => {
             </Text>
           </Block>
         </Block>
-        <Block z={10} absolute middle center>
-          <Photo
-            source={require('../../assets/images/pokemon_1.png')}
-            resizeMode="contain"
-            style={{ maxWidth: width / 1.4, flex: 1 }}
-          />
-        </Block>
+        <FlatList
+          ref={flatListRef}
+          horizontal
+          pagingEnabled
+          scrollEnabled
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={16}
+          snapToAlignment="center"
+          data={pokemonsList}
+          keyExtractor={(item: PokemonProps) => `${item.detail.id}`}
+          renderItem={({ item, index }) => (
+            <Block key={index} width={width} middle center>
+              <Photo
+                source={item.image_url}
+                resizeMode="contain"
+                style={{ minWidth: width / 1.4, flex: 1 }}
+              />
+            </Block>
+          )}
+        />
         {pokemonDetails()}
       </Block>
     </RadialGradient>

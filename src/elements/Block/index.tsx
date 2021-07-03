@@ -27,9 +27,7 @@ interface Props {
   fullBorder?: boolean | undefined;
   children?: any | undefined;
   animated?: boolean | undefined;
-  key?: string | number | null | undefined;
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
-  reference?: React.RefObject<View> | undefined;
 }
 
 const Block: React.FC<Props> = ({
@@ -56,9 +54,8 @@ const Block: React.FC<Props> = ({
   fullBorder,
   children,
   animated,
-  key,
   onLayout,
-  reference,
+  ...props
 }) => {
   function handleMargins() {
     if (typeof margin === 'number') {
@@ -184,8 +181,7 @@ const Block: React.FC<Props> = ({
   if (animated) {
     return (
       <Animated.View
-        ref={reference}
-        key={key}
+        {...props}
         style={[absolute === true ? StyleSheet.absoluteFill : null, blockStyles]}
         onLayout={onLayout}
       >
@@ -195,7 +191,7 @@ const Block: React.FC<Props> = ({
   }
 
   return (
-    <View ref={reference} key={key} style={blockStyles} onLayout={onLayout}>
+    <View {...props} style={blockStyles} onLayout={onLayout}>
       {children}
     </View>
   );

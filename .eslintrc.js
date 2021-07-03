@@ -11,7 +11,6 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'eslint-import-resolver-babel-module',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -43,6 +42,8 @@ module.exports = {
     'prettier/prettier': 'error',
     'object-curly-newline': 'off',
     'global-require': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    
   },
   settings: {
     'import/resolver': {
@@ -53,7 +54,6 @@ module.exports = {
         paths: ['./src'],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
-      'babel-module': {},
     },
     react: {
       version: 'detect',
