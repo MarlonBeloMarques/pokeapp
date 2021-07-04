@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
+import ImageColors from 'react-native-image-colors';
 import { Block, Button, Photo, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
@@ -38,8 +39,15 @@ const Home: React.FC = () => {
   const [pokemonsListLength, setPokemonListLength] = useState(10);
 
   const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
-
+  const [loadingFinished, setLoadingFinished] = useState(false);
   const flatListRef = useRef<FlatList<any>>(null);
+
+  useEffect(() => {
+    if (currentPokemon !== undefined && Object.entries(currentPokemon).length !== 0) {
+      getImageColors(currentPokemon, setCurrentColor);
+      setLoadingFinished(true);
+    }
+  }, [currentPokemon]);
 
   useEffect(() => {
     getPokemons();
@@ -118,6 +126,21 @@ const Home: React.FC = () => {
   const getAbilityId = (abilityUrl: string): string => abilityUrl.split('/')[6];
   const getImageUrl = (pokemonId: number): string => `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
 
+  const getImageColors = async (
+    pokemon: PokemonProps,
+    colorChange: React.Dispatch<React.SetStateAction<any>>,
+  ): Promise<void> => {
+    const colors = await ImageColors.getColors(pokemon.image_url, {
+      cache: true,
+    });
+
+    if (colors.platform === 'ios') {
+      colorChange(colors);
+    } else {
+      colorChange(colors);
+    }
+  };
+
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
   ): Array<string | undefined> => {
@@ -191,6 +214,26 @@ const Home: React.FC = () => {
               {currentPokemon?.name}
             </Text>
           </Block>
+        </Block>
+        <Block
+          absolute
+          flex={false}
+          width={width}
+          height={height}
+          animated
+          style={{
+            backgroundColor: getBackgroundColors(currentColor)[1],
+          }}
+        >
+          {loadingFinished && (
+            <RadialGradient
+              style={{ flex: 1, zIndex: 1 }}
+              colors={getBackgroundColors(currentColor)}
+              stops={[0.1, 0.8, 0.3, 0.75]}
+              center={[width, 250]}
+              radius={600}
+            />
+          )}
         </Block>
         <FlatList
           ref={flatListRef}
