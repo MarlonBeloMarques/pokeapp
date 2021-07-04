@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
-import { Dimensions, FlatList } from 'react-native';
+import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import { Block, Button, Photo, Text } from '../../elements';
@@ -25,7 +25,9 @@ const Home: React.FC = () => {
   const paddingTop = headerHeight + theme.sizes.base;
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
+  const [currentPokemon, setCurrentPokemon] = useState<PokemonProps>();
   const [urlImage, setUrlImage] = useState('');
+  const [pokemonsListLength, setPokemonListLength] = useState(10);
 
   const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
 
@@ -37,12 +39,16 @@ const Home: React.FC = () => {
 
   const getPokemons = async (): Promise<void> => {
     try {
-      const pokemons: Pokemons = await pokemonService.getAll(POKEAPI_URL, 1, 20).then();
+      const pokemons: Pokemons = await pokemonService
+        .getAll(POKEAPI_URL, 1, pokemonsListLength)
+        .then();
 
       for (let cont = 0; cont < pokemons.results.length; cont + 1) {
         const pokemonDetail: PokemonDetail = await pokemonService
           .get(POKEAPI_URL, parseInt(getId(pokemons.results[cont]), 10))
           .then();
+
+        getFirstPokemon(pokemons, pokemonDetail, cont);
 
         setPokemonsList((pokemon) => [
           ...pokemon,
@@ -57,6 +63,17 @@ const Home: React.FC = () => {
         cont += 1;
       }
     } catch (error) {}
+  };
+
+  const getFirstPokemon = (pokemons: Pokemons, pokemonDetail: PokemonDetail, cont: number) => {
+    if (cont === 0) {
+      setCurrentPokemon({
+        name: pokemons.results[cont].name,
+        url: pokemons.results[cont].url,
+        detail: pokemonDetail,
+        image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+      });
+    }
   };
 
   const getId = (result: Result): string => result.url.split('/')[6];
@@ -76,6 +93,15 @@ const Home: React.FC = () => {
     return ['#82BF96', darken(0.3, '#82BF96')];
   };
 
+  const checkScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const totalLength = event.nativeEvent.contentSize.width;
+    const traveledLength = event.nativeEvent.contentOffset.x;
+
+    const pokemonIndex = Math.floor((traveledLength * pokemonsListLength) / totalLength);
+
+    setCurrentPokemon(pokemonsList[pokemonIndex]);
+  };
+
   const pokemonDetails = (): React.ReactElement => (
     <Block
       z={10}
@@ -86,12 +112,13 @@ const Home: React.FC = () => {
       style={{ justifyContent: 'flex-end', bottom: 0 }}
     >
       <Block flex={false} row>
-        <Button shadow style={styles.buttonDetail}>
-          <Text>speed</Text>
-        </Button>
-        <Button shadow style={styles.buttonDetail}>
-          <Text>attack</Text>
-        </Button>
+        {currentPokemon?.detail.abilities.map((ability) => (
+          <Block flex={false}>
+            <Button shadow style={styles.buttonDetail}>
+              <Text>{ability.ability.name}</Text>
+            </Button>
+          </Block>
+        ))}
       </Block>
       <Block middle>
         <Text medium>
@@ -122,7 +149,7 @@ const Home: React.FC = () => {
         >
           <Block flex={false} padding={[paddingTop, 0, 0, 0]}>
             <Text bold h1>
-              Bulbasaur
+              {currentPokemon?.name}
             </Text>
           </Block>
         </Block>
@@ -145,6 +172,7 @@ const Home: React.FC = () => {
               />
             </Block>
           )}
+          onScroll={checkScroll}
         />
         {pokemonDetails()}
       </Block>

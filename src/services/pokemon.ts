@@ -1,5 +1,5 @@
 interface Ability {
-  abilitiy: { name: string; url: string };
+  ability: { name: string; url: string };
 }
 
 interface Type {
