@@ -3,6 +3,7 @@ import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/li
 import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
 import {
+  Animated,
   Dimensions,
   FlatList,
   NativeScrollEvent,
@@ -34,20 +35,47 @@ const Home: React.FC = () => {
   const paddingTop = headerHeight + theme.sizes.base;
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
+  const [previousPokemon, setPreviousPokemon] = useState<PokemonProps>();
   const [currentPokemon, setCurrentPokemon] = useState<PokemonProps>();
-  const [urlImage, setUrlImage] = useState('');
   const [pokemonsListLength, setPokemonListLength] = useState(10);
 
   const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
   const [loadingFinished, setLoadingFinished] = useState(false);
+
+  const [loadingProgress] = useState(new Animated.Value(0));
+  const [opacityProgress] = useState(new Animated.Value(0));
+
   const flatListRef = useRef<FlatList<any>>(null);
 
   useEffect(() => {
     if (currentPokemon !== undefined && Object.entries(currentPokemon).length !== 0) {
-      getImageColors(currentPokemon, setCurrentColor);
-      setLoadingFinished(true);
+      if (previousPokemon !== undefined && Object.entries(previousPokemon).length !== 0) {
+        loadingProgress.setValue(0);
+        opacityProgress.setValue(0);
+        setLoadingFinished(false);
+
+        getImageColors(previousPokemon, setPreviousColor);
+        getImageColors(currentPokemon, setCurrentColor);
+
+        runsAnimations();
+      }
     }
   }, [currentPokemon]);
+
+  const runsAnimations = (): void => {
+    Animated.timing(loadingProgress, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: false,
+    }).start(() => {
+      setLoadingFinished(true);
+      Animated.timing(opacityProgress, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: false,
+      }).start();
+    });
+  };
 
   useEffect(() => {
     getPokemons();
@@ -112,6 +140,14 @@ const Home: React.FC = () => {
     cont: number,
   ) => {
     if (cont === 0) {
+      setPreviousPokemon({
+        name: pokemons.results[cont].name,
+        url: pokemons.results[cont].url,
+        detail: pokemonDetail,
+        image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+        abilities: pokemonAbilitiesList,
+      });
+
       setCurrentPokemon({
         name: pokemons.results[cont].name,
         url: pokemons.results[cont].url,
@@ -161,6 +197,7 @@ const Home: React.FC = () => {
 
     const pokemonIndex = Math.floor((traveledLength * pokemonsListLength) / totalLength);
 
+    setPreviousPokemon(pokemonsList[pokemonIndex - 1]);
     setCurrentPokemon(pokemonsList[pokemonIndex]);
   };
 
@@ -216,46 +253,71 @@ const Home: React.FC = () => {
           </Block>
         </Block>
         <Block
-          absolute
           flex={false}
-          width={width}
-          height={height}
           animated
           style={{
             backgroundColor: getBackgroundColors(currentColor)[1],
+            borderRadius: loadingProgress.interpolate({
+              inputRange: [0, 0.4, 0.8, 1],
+              outputRange: [100, 200, 300, 0],
+            }),
+            width: loadingProgress.interpolate({
+              inputRange: [0, 0.8, 1],
+              outputRange: [0, height, width],
+            }),
+            height: loadingProgress.interpolate({
+              inputRange: [0, 0.8, 1],
+              outputRange: [0, height, height],
+            }),
           }}
         >
           {loadingFinished && (
-            <RadialGradient
-              style={{ flex: 1, zIndex: 1 }}
-              colors={getBackgroundColors(currentColor)}
-              stops={[0.1, 0.8, 0.3, 0.75]}
-              center={[width, 250]}
-              radius={600}
-            />
+            <>
+              <Block
+                z={2}
+                animated
+                absolute
+                style={{
+                  backgroundColor: getBackgroundColors(currentColor)[1],
+                  opacity: opacityProgress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0],
+                  }),
+                }}
+              />
+              <RadialGradient
+                style={{ flex: 1, zIndex: 1 }}
+                colors={getBackgroundColors(currentColor)}
+                stops={[0.1, 0.8, 0.3, 0.75]}
+                center={[width, 250]}
+                radius={600}
+              />
+            </>
           )}
         </Block>
-        <FlatList
-          ref={flatListRef}
-          horizontal
-          pagingEnabled
-          scrollEnabled
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={16}
-          snapToAlignment="center"
-          data={pokemonsList}
-          keyExtractor={(item: PokemonProps) => `${item.detail.id}`}
-          renderItem={({ item, index }) => (
-            <Block key={index} width={width} middle center>
-              <Photo
-                source={item.image_url}
-                resizeMode="contain"
-                style={{ minWidth: width / 1.4, flex: 1 }}
-              />
-            </Block>
-          )}
-          onScroll={checkScroll}
-        />
+        <Block z={11} absolute width={width} height={height}>
+          <FlatList
+            ref={flatListRef}
+            horizontal
+            pagingEnabled
+            scrollEnabled
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={16}
+            snapToAlignment="center"
+            data={pokemonsList}
+            keyExtractor={(item: PokemonProps) => `${item.detail.id}`}
+            renderItem={({ item, index }) => (
+              <Block key={index} width={width} middle center>
+                <Photo
+                  source={item.image_url}
+                  resizeMode="contain"
+                  style={{ minWidth: width / 1.4, flex: 1 }}
+                />
+              </Block>
+            )}
+            onScroll={checkScroll}
+          />
+        </Block>
         {pokemonDetails()}
       </Block>
     </RadialGradient>
