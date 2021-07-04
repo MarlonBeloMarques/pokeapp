@@ -163,7 +163,7 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
           <Photo
             source={urlImage}
             resizeMode="contain"
-            style={{ maxWidth: width / 1.2, flex: 1 }}
+            style={{ maxWidth: width / 1.4, flex: 1 }}
           />
         </Block>
         <Block
