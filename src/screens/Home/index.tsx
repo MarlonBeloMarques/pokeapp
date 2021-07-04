@@ -213,7 +213,13 @@ const Home: React.FC = () => {
       <Block flex={false} row margin={[0, 0, theme.sizes.padding, 0]}>
         {currentPokemon?.detail.abilities.map((ability) => (
           <Block key={ability.ability.url} flex={false}>
-            <Button shadow style={styles.buttonDetail}>
+            <Button
+              shadow
+              style={[
+                { backgroundColor: getBackgroundColors(currentColor)[0] },
+                styles.buttonDetail,
+              ]}
+            >
               <Text>{ability.ability.name}</Text>
             </Button>
           </Block>
