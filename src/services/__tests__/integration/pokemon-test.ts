@@ -3,6 +3,7 @@ import nock from 'nock';
 import pokemonService from '../../pokemon-service';
 import pokemonsExpectedData from '../fixtures/pokemons';
 import pokemonExpectedData from '../fixtures/pokemon';
+import pokemonAbilityExpectedData from '../fixtures/pokemon-ability';
 
 describe('pokemon service', () => {
   describe('.getAll', () => {
@@ -51,7 +52,32 @@ describe('pokemon service', () => {
       const expectedHttpStatus = 404;
       nock('http://mock-api.com.br').get(`/pokemon/${1}`).reply(expectedHttpStatus, expectedError);
       // when
-      const data = await pokemonService.get('http://mock-api.com.br',1);
+      const data = await pokemonService.get('http://mock-api.com.br', 1);
+      // then
+      expect(data).toEqual({
+        status: expectedHttpStatus,
+        error: expectedError,
+      });
+    });
+  });
+
+  describe('.getAbility', () => {
+    it('returns pokemon ability data via api', async () => {
+      // given
+      nock('http://mock-api.com.br').get(`/ability/${65}`).reply(200, pokemonAbilityExpectedData);
+      // when
+      const data = await pokemonService.getAbility('http://mock-api.com.br', 65);
+      // then
+      expect(data).toEqual(pokemonAbilityExpectedData);
+    });
+
+    it('returns an error when the pokemon ability endpoint by id does not exist', async () => {
+      // given
+      const expectedError = { message: 'Not Found' };
+      const expectedHttpStatus = 404;
+      nock('http://mock-api.com.br').get(`/ability/${65}`).reply(expectedHttpStatus, expectedError);
+      // when
+      const data = await pokemonService.getAbility('http://mock-api.com.br', 65);
       // then
       expect(data).toEqual({
         status: expectedHttpStatus,
