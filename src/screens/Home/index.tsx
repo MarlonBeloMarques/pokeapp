@@ -212,7 +212,7 @@ const Home: React.FC = () => {
     >
       <Block flex={false} row margin={[0, 0, theme.sizes.padding, 0]}>
         {currentPokemon?.detail.abilities.map((ability) => (
-          <Block flex={false}>
+          <Block key={ability.ability.url} flex={false}>
             <Button shadow style={styles.buttonDetail}>
               <Text>{ability.ability.name}</Text>
             </Button>
@@ -221,9 +221,11 @@ const Home: React.FC = () => {
       </Block>
       <ScrollView showsVerticalScrollIndicator={false}>
         {currentPokemon?.abilities.map((ability) => (
-          <Text medium style={{ paddingTop: theme.sizes.caption }}>
-            {ability.effect_entries[1].effect}
-          </Text>
+          <Block key={ability.id} flex={false}>
+            <Text medium style={{ paddingTop: theme.sizes.caption }}>
+              {ability.effect_entries[1].effect}
+            </Text>
+          </Block>
         ))}
       </ScrollView>
     </Block>
