@@ -2,7 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
-import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+} from 'react-native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import { Block, Button, Photo, Text } from '../../elements';
@@ -12,12 +18,14 @@ import styles from './styles';
 import pokemonService from '../../services/pokemon-service';
 import { Pokemons, Result } from '../../services/pokemons';
 import PokemonDetail from '../../services/pokemon';
+import PokemonAbility from '../../services/pokemon-ability';
 
 const { width, height } = Dimensions.get('screen');
 
 interface PokemonProps extends Result {
   image_url: string;
   detail: PokemonDetail;
+  abilities: Array<PokemonAbility>;
 }
 
 const Home: React.FC = () => {
@@ -48,7 +56,9 @@ const Home: React.FC = () => {
           .get(POKEAPI_URL, parseInt(getId(pokemons.results[cont]), 10))
           .then();
 
-        getFirstPokemon(pokemons, pokemonDetail, cont);
+        const pokemonAbilitiesList = await getPokemonAbilities(pokemonDetail);
+
+        getFirstPokemon(pokemons, pokemonDetail, pokemonAbilitiesList, cont);
 
         setPokemonsList((pokemon) => [
           ...pokemon,
@@ -57,6 +67,7 @@ const Home: React.FC = () => {
             url: pokemons.results[cont].url,
             detail: pokemonDetail,
             image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+            abilities: pokemonAbilitiesList,
           },
         ]);
 
@@ -65,18 +76,46 @@ const Home: React.FC = () => {
     } catch (error) {}
   };
 
-  const getFirstPokemon = (pokemons: Pokemons, pokemonDetail: PokemonDetail, cont: number) => {
+  const getPokemonAbilities = async (
+    pokemonDetail: PokemonDetail,
+  ): Promise<Array<PokemonAbility>> => {
+    const pokemonAbilitiesList: Array<PokemonAbility> = [];
+
+    for (let contAbilities = 0; contAbilities < pokemonDetail.abilities.length; contAbilities + 1) {
+      const pokemonAbility: PokemonAbility = await pokemonService
+        .getAbility(
+          POKEAPI_URL,
+          parseInt(getAbilityId(pokemonDetail.abilities[contAbilities].ability.url), 10),
+        )
+        .then();
+
+      pokemonAbilitiesList.push(pokemonAbility);
+
+      contAbilities += 1;
+    }
+
+    return pokemonAbilitiesList;
+  };
+
+  const getFirstPokemon = (
+    pokemons: Pokemons,
+    pokemonDetail: PokemonDetail,
+    pokemonAbilitiesList: Array<PokemonAbility>,
+    cont: number,
+  ) => {
     if (cont === 0) {
       setCurrentPokemon({
         name: pokemons.results[cont].name,
         url: pokemons.results[cont].url,
         detail: pokemonDetail,
         image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+        abilities: pokemonAbilitiesList,
       });
     }
   };
 
   const getId = (result: Result): string => result.url.split('/')[6];
+  const getAbilityId = (abilityUrl: string): string => abilityUrl.split('/')[6];
   const getImageUrl = (pokemonId: number): string => `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
 
   const getBackgroundColors = (
@@ -111,7 +150,7 @@ const Home: React.FC = () => {
       padding={theme.sizes.padding}
       style={{ justifyContent: 'flex-end', bottom: 0 }}
     >
-      <Block flex={false} row>
+      <Block flex={false} row margin={[0, 0, theme.sizes.padding, 0]}>
         {currentPokemon?.detail.abilities.map((ability) => (
           <Block flex={false}>
             <Button shadow style={styles.buttonDetail}>
@@ -120,13 +159,13 @@ const Home: React.FC = () => {
           </Block>
         ))}
       </Block>
-      <Block middle>
-        <Text medium>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic quae est libero magnam
-          veritatis voluptatibus officia, saepe quibusdam! Eos necessitatibus provident quibusdam,
-          officiis explicabo doloremque aliquam. Earum doloremque illum doloribus?
-        </Text>
-      </Block>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {currentPokemon?.abilities.map((ability) => (
+          <Text medium style={{ paddingTop: theme.sizes.caption }}>
+            {ability.effect_entries[1].effect}
+          </Text>
+        ))}
+      </ScrollView>
     </Block>
   );
 
