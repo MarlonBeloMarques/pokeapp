@@ -16,6 +16,7 @@ import ImageColors from 'react-native-image-colors';
 import { Block, Button, Photo, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
+import { LoadingScreen } from '../../components';
 
 import pokemonService from '../../services/pokemon-service';
 import { Pokemons, Result } from '../../services/pokemons';
@@ -41,6 +42,7 @@ const Home: React.FC = () => {
 
   const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
   const [loadingFinished, setLoadingFinished] = useState(false);
+  const [loadingScreen, setLoadingScreen] = useState(true);
 
   const [loadingProgress] = useState(new Animated.Value(0));
   const [opacityProgress] = useState(new Animated.Value(0));
@@ -109,6 +111,10 @@ const Home: React.FC = () => {
 
         cont += 1;
       }
+
+      setTimeout(() => {
+        setLoadingScreen(false);
+      }, 1000);
     } catch (error) {}
   };
 
@@ -236,6 +242,9 @@ const Home: React.FC = () => {
       </ScrollView>
     </Block>
   );
+  if (loadingScreen) {
+    return <LoadingScreen visible={loadingScreen} />;
+  }
 
   return (
     <RadialGradient

@@ -10,6 +10,7 @@
 		00E356F31AD99517003FC87E /* PokeAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PokeAppTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		541D301D2693267A00FD974E /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541D301C2693267A00FD974E /* File.swift */; };
 		5475E39F26821C6600CE0DD5 /* Pokemon Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */; };
 		5475E43E268221C400CE0DD5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		5BFEC331BF89135A5177915F /* libPods-PokeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 534038940D79ED4FA8AEBB76 /* libPods-PokeApp.a */; };
@@ -39,6 +40,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = PokeApp/main.m; sourceTree = "<group>"; };
 		4A52435EF3877D1D05680D5D /* Pods-PokeApp-PokeAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PokeApp-PokeAppTests.release.xcconfig"; path = "Target Support Files/Pods-PokeApp-PokeAppTests/Pods-PokeApp-PokeAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		534038940D79ED4FA8AEBB76 /* libPods-PokeApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PokeApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		541D301B2693267900FD974E /* PokeApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PokeApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		541D301C2693267A00FD974E /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		54F7529726821092008C38D8 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		54F7529826821092008C38D8 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		54F7529926821092008C38D8 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -110,6 +113,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				541D301C2693267A00FD974E /* File.swift */,
+				541D301B2693267900FD974E /* PokeApp-Bridging-Header.h */,
 			);
 			name = PokeApp;
 			sourceTree = "<group>";
@@ -257,7 +262,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -461,6 +466,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				541D301D2693267A00FD974E /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -480,6 +486,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 004AD384D4C97945067A6CE8 /* Pods-PokeApp-PokeAppTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -507,6 +514,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4A52435EF3877D1D05680D5D /* Pods-PokeApp-PokeAppTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = PokeAppTests/Info.plist;
@@ -547,6 +555,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = PokeApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "PokeApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -572,6 +581,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = PokeApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "PokeApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

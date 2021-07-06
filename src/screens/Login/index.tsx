@@ -8,7 +8,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { darken } from 'polished';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
-import { Title } from '../../components';
+import { Title, LoadingScreen } from '../../components';
 import '../../../config/Reactotron';
 
 const { width, height } = Dimensions.get('screen');
@@ -27,10 +27,16 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
   const [opacityProgress] = useState(new Animated.Value(0));
   const [loadingFinished, setLoadingFinished] = useState(false);
 
+  const [loadingScreen, setLoadingScreen] = useState(true);
+
   useEffect(() => {
     const showImages = async (): Promise<void> => {
       getImageColors(pokemons[0].id, setCurrentColor);
       setUrlImage(pokemons[0].image);
+
+      setTimeout(() => {
+        setLoadingScreen(false);
+      }, 1000);
 
       for (let cont = 1; cont <= 3; cont += 1) {
         runsAnimations();
@@ -137,6 +143,9 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
       </Button>
     </Block>
   );
+  if (loadingScreen) {
+    return <LoadingScreen visible={loadingScreen} />;
+  }
 
   return (
     <RadialGradient
