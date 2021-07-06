@@ -5,7 +5,6 @@ import { darken } from 'polished';
 import {
   Animated,
   Dimensions,
-  FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -13,7 +12,7 @@ import {
 import { useHeaderHeight } from '@react-navigation/stack';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import ImageColors from 'react-native-image-colors';
-import { Block, Button, Photo, Text } from '../../elements';
+import { Block, Button, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
 import { LoadingScreen } from '../../components';
@@ -22,6 +21,7 @@ import pokemonService from '../../services/pokemon-service';
 import { Pokemons, Result } from '../../services/pokemons';
 import PokemonDetail from '../../services/pokemon';
 import PokemonAbility from '../../services/pokemon-ability';
+import PokemonList from '../../components/PokemonList';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -46,9 +46,6 @@ const Home: React.FC = () => {
 
   const [loadingProgress] = useState(new Animated.Value(0));
   const [opacityProgress] = useState(new Animated.Value(0));
-
-  const flatListRef = useRef<FlatList<any>>(null);
-
   useEffect(() => {
     if (currentPokemon !== undefined && Object.entries(currentPokemon).length !== 0) {
       if (previousPokemon !== undefined && Object.entries(previousPokemon).length !== 0) {
@@ -74,7 +71,7 @@ const Home: React.FC = () => {
       Animated.timing(opacityProgress, {
         toValue: 1,
         duration: 400,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start();
     });
   };
@@ -312,29 +309,7 @@ const Home: React.FC = () => {
             </>
           )}
         </Block>
-        <Block z={11} absolute width={width} height={height}>
-          <FlatList
-            ref={flatListRef}
-            horizontal
-            pagingEnabled
-            scrollEnabled
-            showsHorizontalScrollIndicator={false}
-            scrollEventThrottle={16}
-            snapToAlignment="center"
-            data={pokemonsList}
-            keyExtractor={(item: PokemonProps) => `${item.detail.id}`}
-            renderItem={({ item, index }) => (
-              <Block key={index} width={width} middle center>
-                <Photo
-                  source={item.image_url}
-                  resizeMode="contain"
-                  style={{ minWidth: width / 1.4, flex: 1 }}
-                />
-              </Block>
-            )}
-            onScroll={checkScroll}
-          />
-        </Block>
+        <PokemonList pokemonsList={pokemonsList} checkScroll={checkScroll} />
         {pokemonDetails()}
       </Block>
     </RadialGradient>
