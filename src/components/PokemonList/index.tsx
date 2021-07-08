@@ -10,6 +10,7 @@ const { width, height } = Dimensions.get('screen');
 interface Props {
   pokemonsList: Array<PokemonProps>;
   checkScroll: ((event: NativeSyntheticEvent<NativeScrollEvent>) => void) | undefined;
+  onEndReached: () => {};
 }
 
 interface PokemonProps extends Result {
@@ -18,7 +19,7 @@ interface PokemonProps extends Result {
   abilities: Array<PokemonAbility>;
 }
 
-const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll }) => {
+const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll, onEndReached }) => {
   const flatListRef = useRef<FlatList<any>>(null);
 
   const renderPokemonList = (): React.ReactElement => (
@@ -43,6 +44,9 @@ const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll }) => {
           </Block>
         )}
         onScroll={checkScroll}
+        onEndReachedThreshold={0.6}
+        onEndReached={onEndReached}
+        extraData={pokemonsList}
       />
     </Block>
   );

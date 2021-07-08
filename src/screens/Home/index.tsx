@@ -12,6 +12,7 @@ import {
 import { useHeaderHeight } from '@react-navigation/stack';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import ImageColors from 'react-native-image-colors';
+import queryString from 'query-string';
 import { Block, Button, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
@@ -39,6 +40,7 @@ const Home: React.FC = () => {
   const [previousPokemon, setPreviousPokemon] = useState<PokemonProps>();
   const [currentPokemon, setCurrentPokemon] = useState<PokemonProps>();
   const [pokemonsListLength, setPokemonListLength] = useState(10);
+  const [offset, setOffset] = useState(1);
 
   const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
   const [loadingFinished, setLoadingFinished] = useState(false);
@@ -83,9 +85,8 @@ const Home: React.FC = () => {
   const getPokemons = async (): Promise<void> => {
     try {
       const pokemons: Pokemons = await pokemonService
-        .getAll(POKEAPI_URL, 1, pokemonsListLength)
+        .getAll(POKEAPI_URL, offset, pokemonsListLength)
         .then();
-
       for (let cont = 0; cont < pokemons.results.length; cont + 1) {
         const pokemonDetail: PokemonDetail = await pokemonService
           .get(POKEAPI_URL, parseInt(getId(pokemons.results[cont]), 10))
@@ -109,10 +110,31 @@ const Home: React.FC = () => {
         cont += 1;
       }
 
+      updateOffsetValue(pokemons.next);
+      updatePokemonListLength();
+      loadingTimeout();
+    } catch (error) {}
+  };
+
+  const loadingTimeout = (): void => {
+    if (offset === 1) {
       setTimeout(() => {
         setLoadingScreen(false);
       }, 1000);
-    } catch (error) {}
+    }
+  };
+
+  const updatePokemonListLength = (): void => {
+    if (offset !== 1) {
+      setPokemonListLength(pokemonsListLength + pokemonsListLength);
+    }
+  };
+
+  const updateOffsetValue = (next: string) => {
+    const nextUrl = queryString.parseUrl(next);
+    const offsetValue = nextUrl.query.offset?.toString();
+
+    setOffset(parseInt(offsetValue || offset.toString(), 10));
   };
 
   const getPokemonAbilities = async (
@@ -142,7 +164,7 @@ const Home: React.FC = () => {
     pokemonAbilitiesList: Array<PokemonAbility>,
     cont: number,
   ) => {
-    if (cont === 0) {
+    if (cont === 0 && offset === 1) {
       setPreviousPokemon({
         name: pokemons.results[cont].name,
         url: pokemons.results[cont].url,
@@ -309,7 +331,11 @@ const Home: React.FC = () => {
             </>
           )}
         </Block>
-        <PokemonList pokemonsList={pokemonsList} checkScroll={checkScroll} />
+        <PokemonList
+          pokemonsList={pokemonsList}
+          checkScroll={checkScroll}
+          onEndReached={getPokemons}
+        />
         {pokemonDetails()}
       </Block>
     </RadialGradient>
