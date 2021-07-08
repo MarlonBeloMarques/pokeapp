@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
@@ -48,6 +48,7 @@ const Home: React.FC = () => {
 
   const [loadingProgress] = useState(new Animated.Value(0));
   const [opacityProgress] = useState(new Animated.Value(0));
+
   useEffect(() => {
     if (currentPokemon !== undefined && Object.entries(currentPokemon).length !== 0) {
       if (previousPokemon !== undefined && Object.entries(previousPokemon).length !== 0) {
@@ -83,6 +84,8 @@ const Home: React.FC = () => {
   }, []);
 
   const getPokemons = async (): Promise<void> => {
+    const newPokemonsList: Array<PokemonProps> = [];
+
     try {
       const pokemons: Pokemons = await pokemonService
         .getAll(POKEAPI_URL, offset, pokemonsListLength)
@@ -94,22 +97,20 @@ const Home: React.FC = () => {
 
         const pokemonAbilitiesList = await getPokemonAbilities(pokemonDetail);
 
-        getFirstPokemon(pokemons, pokemonDetail, pokemonAbilitiesList, cont);
+        getPokemonInitialValues(pokemons, pokemonDetail, pokemonAbilitiesList, cont);
 
-        setPokemonsList((pokemon) => [
-          ...pokemon,
-          {
-            name: pokemons.results[cont].name,
-            url: pokemons.results[cont].url,
-            detail: pokemonDetail,
-            image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
-            abilities: pokemonAbilitiesList,
-          },
-        ]);
+        newPokemonsList.push({
+          name: pokemons.results[cont].name,
+          url: pokemons.results[cont].url,
+          detail: pokemonDetail,
+          image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+          abilities: pokemonAbilitiesList,
+        });
 
         cont += 1;
       }
 
+      setPokemonsList((pokemon) => [...pokemon, ...newPokemonsList]);
       updateOffsetValue(pokemons.next);
       updatePokemonListLength();
       loadingTimeout();
@@ -158,28 +159,23 @@ const Home: React.FC = () => {
     return pokemonAbilitiesList;
   };
 
-  const getFirstPokemon = (
+  const getPokemonInitialValues = (
     pokemons: Pokemons,
     pokemonDetail: PokemonDetail,
     pokemonAbilitiesList: Array<PokemonAbility>,
     cont: number,
   ) => {
+    const pokemon: PokemonProps = {
+      name: pokemons.results[cont].name,
+      url: pokemons.results[cont].url,
+      detail: pokemonDetail,
+      image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+      abilities: pokemonAbilitiesList,
+    };
     if (cont === 0 && offset === 1) {
-      setPreviousPokemon({
-        name: pokemons.results[cont].name,
-        url: pokemons.results[cont].url,
-        detail: pokemonDetail,
-        image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
-        abilities: pokemonAbilitiesList,
-      });
+      setPreviousPokemon(pokemon);
 
-      setCurrentPokemon({
-        name: pokemons.results[cont].name,
-        url: pokemons.results[cont].url,
-        detail: pokemonDetail,
-        image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
-        abilities: pokemonAbilitiesList,
-      });
+      setCurrentPokemon(pokemon);
     }
   };
 
