@@ -33,7 +33,8 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.3.0",
     "react-native-vector-icons": "^8.1.0",
-    "reactotron-react-native": "^5.0.0"
+    "reactotron-react-native": "^5.0.0",
+    "realm": "^10.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -1,8 +1,10 @@
 interface Ability {
+  id: number;
   ability: { name: string; url: string };
 }
 
 interface Type {
+  id: number;
   type: { name: string; url: string };
 }
 
