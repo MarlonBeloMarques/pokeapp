@@ -229,7 +229,7 @@ const Home: React.FC = () => {
 
   const pokemonDetails = (): React.ReactElement => (
     <Block
-      z={10}
+      z={12}
       absolute
       height={height / 3}
       width={width}
