@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { Block, Photo } from '../../elements';
 import PokemonAbility from '../../services/pokemon-ability';
@@ -22,7 +22,7 @@ interface PokemonProps extends Result {
 const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll, onEndReached }) => {
   const flatListRef = useRef<FlatList<any>>(null);
 
-  const renderPokemonList = (): React.ReactElement => (
+  return (
     <Block z={11} absolute width={width} height={height}>
       <FlatList
         ref={flatListRef}
@@ -44,14 +44,12 @@ const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll, onEndReached 
           </Block>
         )}
         onScroll={checkScroll}
-        onEndReachedThreshold={0.6}
+        onEndReachedThreshold={1}
         onEndReached={onEndReached}
         extraData={pokemonsList}
       />
     </Block>
   );
-
-  return useMemo(() => renderPokemonList(), [pokemonsList]);
 };
 
 export default PokemonList;

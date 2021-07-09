@@ -174,7 +174,6 @@ const Home: React.FC = () => {
     };
     if (cont === 0 && offset === 1) {
       setPreviousPokemon(pokemon);
-
       setCurrentPokemon(pokemon);
     }
   };
@@ -218,8 +217,14 @@ const Home: React.FC = () => {
 
     const pokemonIndex = Math.floor((traveledLength * pokemonsListLength) / totalLength);
 
-    setPreviousPokemon(pokemonsList[pokemonIndex - 1]);
-    setCurrentPokemon(pokemonsList[pokemonIndex]);
+    const findPokemonIndex = pokemonsList.findIndex(
+      (pokemon) => pokemon.name === currentPokemon?.name,
+    );
+
+    if (pokemonIndex !== findPokemonIndex) {
+      setPreviousPokemon(pokemonsList[findPokemonIndex]);
+      setCurrentPokemon(pokemonsList[pokemonIndex]);
+    }
   };
 
   const pokemonDetails = (): React.ReactElement => (
