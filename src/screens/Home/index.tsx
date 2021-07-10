@@ -23,6 +23,7 @@ import { Pokemons, Result } from '../../services/pokemons';
 import PokemonDetail from '../../services/pokemon';
 import PokemonAbility from '../../services/pokemon-ability';
 import PokemonList from '../../components/PokemonList';
+import getRealm from '../../services/realm';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -97,6 +98,7 @@ const Home: React.FC = () => {
 
         const pokemonAbilitiesList = await getPokemonAbilities(pokemonDetail);
 
+        setPokemonTypesId(pokemonDetail);
         getPokemonInitialValues(pokemons, pokemonDetail, pokemonAbilitiesList, cont);
 
         newPokemonsList.push({
@@ -113,8 +115,25 @@ const Home: React.FC = () => {
       setPokemonsList((pokemon) => [...pokemon, ...newPokemonsList]);
       updateOffsetValue(pokemons.next);
       updatePokemonListLength();
+
+      savePokemonsToLocalStorage(newPokemonsList);
+
       loadingTimeout();
     } catch (error) {}
+  };
+
+  const savePokemonsToLocalStorage = (pokemons: Array<PokemonProps>): void => {
+    pokemons.forEach((pokemonData) => {
+      saveDataToLocalStorage('Pokemon', pokemonData);
+    });
+  };
+
+  const saveDataToLocalStorage = async (schemaName: string, data: any): Promise<void> => {
+    const realm = await getRealm();
+
+    realm.write(() => {
+      realm.create(schemaName, data, 'modified');
+    });
   };
 
   const loadingTimeout = (): void => {
@@ -138,17 +157,40 @@ const Home: React.FC = () => {
     setOffset(parseInt(offsetValue || offset.toString(), 10));
   };
 
+  const setPokemonTypesId = (pokemonDetail: PokemonDetail): void => {
+    for (let contTypes = 0; contTypes < pokemonDetail.types.length; contTypes + 1) {
+      setIdToSaveToLocalStorage(pokemonDetail.types[contTypes], 'Type', 'id');
+
+      saveDataToLocalStorage('Type', pokemonDetail.types[contTypes]);
+      contTypes += 1;
+    }
+  };
+
+  const setIdToSaveToLocalStorage = async <T, K extends keyof T>(
+    object: T,
+    schemaName: string,
+    primaryKey: K,
+  ): Promise<void> => {
+    const realm = await getRealm();
+
+    const lastObject = realm.objects(schemaName).sorted(primaryKey.toString(), true)[0];
+    const highestId: number = lastObject == null ? 0 : lastObject[primaryKey];
+    object[primaryKey] = highestId == null ? 1 : highestId + 1;
+  };
+
   const getPokemonAbilities = async (
     pokemonDetail: PokemonDetail,
   ): Promise<Array<PokemonAbility>> => {
     const pokemonAbilitiesList: Array<PokemonAbility> = [];
 
     for (let contAbilities = 0; contAbilities < pokemonDetail.abilities.length; contAbilities + 1) {
+      const abilityId = getAbilityId(pokemonDetail.abilities[contAbilities].ability.url);
+
+      setIdToSaveToLocalStorage(pokemonDetail.abilities[contAbilities], 'Ability', 'id');
+      saveDataToLocalStorage('Ability', pokemonDetail.abilities[contAbilities]);
+
       const pokemonAbility: PokemonAbility = await pokemonService
-        .getAbility(
-          POKEAPI_URL,
-          parseInt(getAbilityId(pokemonDetail.abilities[contAbilities].ability.url), 10),
-        )
+        .getAbility(POKEAPI_URL, parseInt(abilityId, 10))
         .then();
 
       pokemonAbilitiesList.push(pokemonAbility);
