@@ -4,6 +4,7 @@ interface Language {
 }
 
 interface EffectEntries {
+  id: number;
   effect: string;
   language: Language;
   short_effect: string;

@@ -1,9 +1,10 @@
 export default class EffectEntriesSchema {
   static schema = {
     name: 'EffectEntries',
-    primaryKey: 'effect',
+    primaryKey: 'id',
     properties: {
-      effect: { type: 'string', indexed: true },
+      id: { type: 'int', indexed: true },
+      effect: 'string',
       short_effect: 'string',
       language: 'Language',
     },
