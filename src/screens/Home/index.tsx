@@ -24,6 +24,7 @@ import PokemonDetail from '../../services/pokemon';
 import PokemonAbility from '../../services/pokemon-ability';
 import PokemonList from '../../components/PokemonList';
 import getRealm from '../../services/realm';
+import getPokemonsFromLocalStorage from './realm';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -84,7 +85,18 @@ const Home: React.FC = () => {
     getPokemons();
   }, []);
 
-  const getPokemons = async (): Promise<void> => {
+  const getPokemons = async () => {
+    let pokemons: Array<PokemonProps> = [];
+    if ((await getPokemonsFromLocalStorage()) !== null) {
+      pokemons = await getPokemonsFromLocalStorage();
+    } else {
+      pokemons = await getPokemonsFromPokeApi();
+    }
+
+    loadPokemons(pokemons, undefined);
+  };
+
+  const getPokemonsFromPokeApi = async (): Promise<Array<PokemonProps>> => {
     const newPokemonsList: Array<PokemonProps> = [];
 
     try {
@@ -111,15 +123,19 @@ const Home: React.FC = () => {
 
         cont += 1;
       }
-
-      setPokemonsList((pokemon) => [...pokemon, ...newPokemonsList]);
-      updateOffsetValue(pokemons.next);
-      updatePokemonListLength();
-
-      savePokemonsToLocalStorage(newPokemonsList);
-
-      loadingTimeout();
     } catch (error) {}
+
+    return newPokemonsList;
+  };
+
+  const loadPokemons = (newPokemonsList: Array<PokemonProps>, urlNextPokemons?: string): void => {
+    setPokemonsList((pokemon) => [...pokemon, ...newPokemonsList]);
+    updateOffsetValue(urlNextPokemons);
+    updatePokemonListLength();
+
+    // savePokemonsToLocalStorage(newPokemonsList);
+
+    loadingTimeout();
   };
 
   const savePokemonsToLocalStorage = (pokemons: Array<PokemonProps>): void => {
@@ -150,7 +166,7 @@ const Home: React.FC = () => {
     }
   };
 
-  const updateOffsetValue = (next: string) => {
+  const updateOffsetValue = (next = 'https://pokeapi.co/api/v2/pokemon?offset=11&limit=10') => {
     const nextUrl = queryString.parseUrl(next);
     const offsetValue = nextUrl.query.offset?.toString();
 
@@ -159,9 +175,9 @@ const Home: React.FC = () => {
 
   const setPokemonTypesId = (pokemonDetail: PokemonDetail): void => {
     for (let contTypes = 0; contTypes < pokemonDetail.types.length; contTypes + 1) {
-      setIdToSaveToLocalStorage(pokemonDetail.types[contTypes], 'Type', 'id');
+      // setIdToSaveToLocalStorage(pokemonDetail.types[contTypes], 'Type', 'id');
+      // saveDataToLocalStorage('Type', pokemonDetail.types[contTypes]);
 
-      saveDataToLocalStorage('Type', pokemonDetail.types[contTypes]);
       contTypes += 1;
     }
   };
@@ -186,12 +202,27 @@ const Home: React.FC = () => {
     for (let contAbilities = 0; contAbilities < pokemonDetail.abilities.length; contAbilities + 1) {
       const abilityId = getAbilityId(pokemonDetail.abilities[contAbilities].ability.url);
 
-      setIdToSaveToLocalStorage(pokemonDetail.abilities[contAbilities], 'Ability', 'id');
-      saveDataToLocalStorage('Ability', pokemonDetail.abilities[contAbilities]);
+      // setIdToSaveToLocalStorage(pokemonDetail.abilities[contAbilities], 'Ability', 'id');
+      // saveDataToLocalStorage('Ability', pokemonDetail.abilities[contAbilities]);
 
       const pokemonAbility: PokemonAbility = await pokemonService
         .getAbility(POKEAPI_URL, parseInt(abilityId, 10))
         .then();
+
+      for (
+        let contEffectEntries = 0;
+        contEffectEntries < pokemonAbility.effect_entries.length;
+        contEffectEntries + 1
+      ) {
+        // setIdToSaveToLocalStorage(
+        //   pokemonAbility.effect_entries[contEffectEntries],
+        //   'EffectEntries',
+        //   'id',
+        // );
+        // saveDataToLocalStorage('EffectEntries', pokemonAbility.effect_entries[contEffectEntries]);
+
+        contEffectEntries += 1;
+      }
 
       pokemonAbilitiesList.push(pokemonAbility);
 
