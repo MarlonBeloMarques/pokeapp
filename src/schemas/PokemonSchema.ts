@@ -8,6 +8,11 @@ export default class PokemonSchema {
       image_url: 'string',
       detail: 'PokemonDetail',
       abilities: { type: 'list', objectType: 'PokemonAbility' },
+      page: {
+        type: 'linkingObjects',
+        objectType: 'PokemonsPage',
+        property: 'pokemons',
+      },
     },
   };
 }

@@ -1,40 +1,46 @@
-import { Result } from '../../services/pokemons';
 import PokemonDetail from '../../services/pokemon';
 import PokemonAbility from '../../services/pokemon-ability';
 import getRealm from '../../services/realm';
+import { PokemonProps } from '.';
 
-interface PokemonProps extends Result {
-  image_url: string;
-  detail: PokemonDetail;
-  abilities: Array<PokemonAbility>;
-}
-
-const getPokemonsFromLocalStorage = async (): Promise<Array<PokemonProps> | null> => {
+const getPokemonsFromLocalStorage = async (
+  pagePosition = 0,
+): Promise<Array<PokemonProps> | null> => {
   const realm = await getRealm();
 
   console.tron.log(realm.path);
 
   const pokemonsData: Array<PokemonProps> = [];
 
-  const resultsRealm = realm.objects('Pokemon');
+  try {
+    const resultsRealm = realm.objects('PokemonsPage');
 
-  if (resultsRealm.map((pokemonElement) => pokemonElement.image_url).length !== 0) {
-    resultsRealm.forEach((pokemonElement) => {
-      pokemonsData.push({
-        name: pokemonElement.name,
-        image_url: pokemonElement.image_url,
-        url: pokemonElement.url,
-        detail: getPokemonDetailFromLocalStorage(pokemonElement),
-        abilities: getPokemonAbilitiesFromLocalStorage(pokemonElement),
+    const { pokemons } = resultsRealm[pagePosition];
+
+    if (pokemons.map((pokemonElement) => pokemonElement.image_url).length !== 0) {
+      pokemons.forEach((pokemonElement) => {
+        pokemonsData.push({
+          name: pokemonElement.name,
+          image_url: pokemonElement.image_url,
+          url: pokemonElement.url,
+          detail: getPokemonDetailFromLocalStorage(pokemonElement),
+          abilities: getPokemonAbilitiesFromLocalStorage(pokemonElement),
+          page: {
+            id: resultsRealm[pagePosition].id,
+            count: resultsRealm[pagePosition].count,
+            next: resultsRealm[pagePosition].next,
+            previous: resultsRealm[pagePosition].previous,
+          },
+        });
       });
-    });
 
-    console.tron.log(pokemonsData);
-
-    return pokemonsData;
+      console.tron.log(pokemonsData);
+    }
+  } catch (error) {
+    return null;
   }
 
-  return null;
+  return pokemonsData;
 };
 
 const getPokemonAbilitiesFromLocalStorage = (

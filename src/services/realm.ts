@@ -8,10 +8,12 @@ import PokemonAbilitySchema from '../schemas/PokemonAbilitySchema';
 import PokemonDetailSchema from '../schemas/PokemonDetailSchema';
 import TypeSchema from '../schemas/TypeSchema';
 import TypeDetailSchema from '../schemas/TypeDetailSchema';
+import PokemonsPageSchema from '../schemas/PokemonsPageSchema';
 
 const getRealm = (): ProgressPromise =>
   Realm.open({
     schema: [
+      PokemonsPageSchema,
       PokemonSchema,
       AbilitySchema,
       AbilityDetailSchema,
