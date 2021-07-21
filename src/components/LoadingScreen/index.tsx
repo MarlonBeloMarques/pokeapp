@@ -3,6 +3,7 @@ import { Modal } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { Block } from '../../elements';
 import styles from './styles';
+import Title from '../Title';
 
 interface Props {
   visible: boolean;
@@ -10,8 +11,8 @@ interface Props {
 
 const LoadingScreen: React.FC<Props> = ({ visible }) => (
   <Modal animationType="none" visible={visible}>
-    <Block color="white" center middle>
-      <Block style={styles.wrapperLoading}>
+    <Block color="white" middle center>
+      <Block middle style={styles.wrapperLoading}>
         <LottieView
           source={require('../../assets/animations/loading.json')}
           autoPlay
@@ -19,6 +20,9 @@ const LoadingScreen: React.FC<Props> = ({ visible }) => (
           style={{ width: 180, height: 180 }}
         />
       </Block>
+    </Block>
+    <Block absolute style={styles.titleBottom}>
+      <Title />
     </Block>
   </Modal>
 );

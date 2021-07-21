@@ -6,4 +6,9 @@ export default StyleSheet.create({
     borderColor: theme.colors.primary,
     borderBottomWidth: 3,
   },
+  titleBottom: {
+    bottom: 0,
+    alignSelf: 'center',
+    paddingBottom: theme.sizes.padding * 2,
+  },
 });
