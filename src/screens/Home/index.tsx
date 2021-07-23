@@ -13,6 +13,7 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import ImageColors from 'react-native-image-colors';
 import queryString from 'query-string';
+import RNFetchBlob from 'rn-fetch-blob';
 import { Block, Button, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
@@ -26,6 +27,7 @@ import PokemonList from '../../components/PokemonList';
 import getRealm from '../../services/realm';
 import getPokemonsFromLocalStorage from './realm';
 
+const { fs } = RNFetchBlob;
 const { width, height } = Dimensions.get('screen');
 
 interface PokemonsPage {
@@ -37,6 +39,7 @@ interface PokemonsPage {
 
 export interface PokemonProps extends Result {
   image_url: string;
+  image: string;
   detail: PokemonDetail;
   abilities: Array<PokemonAbility>;
   page: PokemonsPage;
@@ -130,11 +133,16 @@ const Home: React.FC = () => {
 
         setPokemonTypesId(pokemonDetail);
 
+        const imageUrl = getImageUrl(parseInt(getId(pokemons.results[cont]), 10));
+
+        const imageBase64 = `data:image/png;base64,${await getImageConvertedToBase64(imageUrl)}`;
+
         newPokemonsList.push({
           name: pokemons.results[cont].name,
           url: pokemons.results[cont].url,
           detail: pokemonDetail,
-          image_url: getImageUrl(parseInt(getId(pokemons.results[cont]), 10)),
+          image_url: imageUrl,
+          image: imageBase64,
           abilities: pokemonAbilitiesList,
           page: getPokemonsPage(pokemons),
         });
@@ -144,6 +152,26 @@ const Home: React.FC = () => {
     } catch (error) {}
 
     return newPokemonsList;
+  };
+
+  const getImageConvertedToBase64 = async (imageUrl: string): Promise<string> => {
+    let imagePath: string;
+    let imageBase64 = '';
+
+    await RNFetchBlob.config({
+      fileCache: true,
+    })
+      .fetch('GET', imageUrl)
+      .then((resp) => {
+        imagePath = resp.path();
+        return resp.readFile('base64');
+      })
+      .then((base64Data) => {
+        imageBase64 = base64Data;
+        return fs.unlink(imagePath);
+      });
+
+    return imageBase64;
   };
 
   const loadPokemons = (newPokemonsList: Array<PokemonProps>, urlNextPokemons?: string): void => {
@@ -275,8 +303,9 @@ const Home: React.FC = () => {
     pokemon: PokemonProps,
     colorChange: React.Dispatch<React.SetStateAction<any>>,
   ): Promise<void> => {
-    const colors = await ImageColors.getColors(pokemon.image_url, {
+    const colors = await ImageColors.getColors(pokemon.image || pokemon.image_url, {
       cache: true,
+      key: pokemon.name,
     });
 
     if (colors.platform === 'ios') {

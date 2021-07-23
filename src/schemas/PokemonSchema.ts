@@ -6,6 +6,7 @@ export default class PokemonSchema {
       name: { type: 'string', indexed: true },
       url: 'string',
       image_url: 'string',
+      image: 'string',
       detail: 'PokemonDetail',
       abilities: { type: 'list', objectType: 'PokemonAbility' },
       page: {

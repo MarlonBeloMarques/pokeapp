@@ -22,6 +22,7 @@ const getPokemonsFromLocalStorage = async (
         pokemonsData.push({
           name: pokemonElement.name,
           image_url: pokemonElement.image_url,
+          image: pokemonElement.image,
           url: pokemonElement.url,
           detail: getPokemonDetailFromLocalStorage(pokemonElement),
           abilities: getPokemonAbilitiesFromLocalStorage(pokemonElement),

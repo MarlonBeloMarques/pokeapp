@@ -14,6 +14,7 @@ interface Props {
 }
 
 interface PokemonProps extends Result {
+  image: string;
   image_url: string;
   detail: PokemonDetail;
   abilities: Array<PokemonAbility>;
@@ -37,7 +38,7 @@ const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll, onEndReached 
         renderItem={({ item, index }) => (
           <Block key={index} width={width} middle center>
             <Photo
-              source={item.image_url}
+              source={item.image || item.image_url}
               resizeMode="contain"
               style={{ minWidth: width / 1.4, flex: 1 }}
             />
