@@ -8,14 +8,20 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import { Block } from './src/elements';
 import Routes from './src/routes';
 
-const App = () => (
-  <Block>
-    <Routes />
-  </Block>
-);
+const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  });
+  return (
+    <Block>
+      <Routes />
+    </Block>
+  );
+};
 
 export default App;

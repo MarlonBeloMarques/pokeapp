@@ -13,6 +13,7 @@
 		541D301D2693267A00FD974E /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541D301C2693267A00FD974E /* File.swift */; };
 		5475E39F26821C6600CE0DD5 /* Pokemon Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 983C204E34D04B6C8D6A3617 /* Pokemon Solid.ttf */; };
 		5475E43E268221C400CE0DD5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		54B87E3F26AC98D0003A2B17 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5BFEC331BF89135A5177915F /* libPods-PokeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 534038940D79ED4FA8AEBB76 /* libPods-PokeApp.a */; };
 		9F14E49E4728F08396947416 /* libPods-PokeApp-PokeAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91AFA433A77721827A0B9EA1 /* libPods-PokeApp-PokeAppTests.a */; };
 /* End PBXBuildFile section */
@@ -297,6 +298,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54B87E3F26AC98D0003A2B17 /* Images.xcassets in Resources */,
 				5475E43E268221C400CE0DD5 /* LaunchScreen.storyboard in Resources */,
 				5475E39F26821C6600CE0DD5 /* Pokemon Solid.ttf in Resources */,
 			);
