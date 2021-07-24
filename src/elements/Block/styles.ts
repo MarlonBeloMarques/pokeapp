@@ -8,7 +8,7 @@ export const backgroundColors = StyleSheet.create({
   black: { backgroundColor: theme.colors.black },
   gray: { backgroundColor: theme.colors.gray },
   apple: { backgroundColor: theme.colors.apple },
-  facebook: { backgroundColor: theme.colors.facebook },
+  guest: { backgroundColor: theme.colors.guest },
   google: { backgroundColor: theme.colors.google },
 });
 

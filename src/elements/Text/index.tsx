@@ -31,7 +31,7 @@ interface Props {
   secondary?: boolean | undefined;
   apple?: boolean | undefined;
   google?: boolean | undefined;
-  facebook?: boolean | undefined;
+  guest?: boolean | undefined;
   style?: any | undefined;
   children?: any | undefined;
 }
@@ -62,7 +62,7 @@ const Typography: React.FC<Props> = ({
   primary,
   secondary,
   google,
-  facebook,
+  guest,
   apple,
   style,
   children,
@@ -96,7 +96,7 @@ const Typography: React.FC<Props> = ({
     primary && colors.primary,
     secondary && colors.secondary,
     apple && colors.apple,
-    facebook && colors.facebook,
+    guest && colors.guest,
     google && colors.google,
     style,
   ];

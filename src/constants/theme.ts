@@ -5,7 +5,7 @@ const colors = {
   black: '#000000',
   gray: '#979797',
   apple: '#1C1C1C',
-  facebook: '#485A96',
+  guest: '#485A96',
   google: '#FFFFFF',
 };
 

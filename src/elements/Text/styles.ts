@@ -8,7 +8,7 @@ export const colors = StyleSheet.create({
   black: { color: theme.colors.black },
   gray: { color: theme.colors.gray },
   apple: { color: theme.colors.apple },
-  facebook: { color: theme.colors.facebook },
+  guest: { color: theme.colors.guest },
   google: { color: theme.colors.google },
 });
 

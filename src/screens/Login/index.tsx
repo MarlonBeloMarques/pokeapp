@@ -117,7 +117,15 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
       padding={theme.sizes.padding}
       style={{ justifyContent: 'flex-end', bottom: 0 }}
     >
-      <Button color="apple" onPress={() => navigation.navigate('Home')}>
+      <Button color="guest" onPress={() => navigation.navigate('Home', { isGuest: true })}>
+        <Block row center space="evenly">
+          <Icon name="user" color={theme.colors.white} size={22} />
+          <Text center bold>
+            Sign in as a guest
+          </Text>
+        </Block>
+      </Button>
+      <Button color="apple" onPress={() => navigation.navigate('Home', { isGuest: false })}>
         <Block row center space="evenly">
           <Icon name="apple1" color={theme.colors.white} size={22} />
           <Text center bold>
@@ -125,19 +133,11 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
           </Text>
         </Block>
       </Button>
-      <Button color="google" onPress={() => navigation.navigate('Home')}>
+      <Button color="google" onPress={() => navigation.navigate('Home', { isGuest: false })}>
         <Block row center space="evenly">
           <Icon name="google" color={theme.colors.gray} size={22} />
           <Text center gray bold>
             Sign in with Google
-          </Text>
-        </Block>
-      </Button>
-      <Button color="facebook" onPress={() => navigation.navigate('Home')}>
-        <Block row center space="evenly">
-          <Icon name="facebook-square" color={theme.colors.white} size={22} />
-          <Text center bold>
-            Sign in with Facebook
           </Text>
         </Block>
       </Button>

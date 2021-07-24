@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
@@ -14,7 +14,8 @@ import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import ImageColors from 'react-native-image-colors';
 import queryString from 'query-string';
 import RNFetchBlob from 'rn-fetch-blob';
-import { Block, Button, Text } from '../../elements';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { Block, Button, Photo, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
 import { LoadingScreen } from '../../components';
@@ -26,6 +27,9 @@ import PokemonAbility from '../../services/pokemon-ability';
 import PokemonList from '../../components/PokemonList';
 import getRealm from '../../services/realm';
 import getPokemonsFromLocalStorage from './realm';
+
+const profile = require('../../assets/images/profile.png');
+const guestProfile = require('../../assets/images/guest_profile.png');
 
 const { fs } = RNFetchBlob;
 const { width, height } = Dimensions.get('screen');
@@ -45,9 +49,16 @@ export interface PokemonProps extends Result {
   page: PokemonsPage;
 }
 
-const Home: React.FC = () => {
+interface Props {
+  route: RouteProp<any, any>;
+  navigation: NavigationProp<any, any>;
+}
+
+const Home: React.FC<Props> = ({ route, navigation }) => {
   const headerHeight = useHeaderHeight();
+  const { isGuest } = route.params;
   const paddingTop = headerHeight + theme.sizes.base;
+
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [previousPokemon, setPreviousPokemon] = useState<PokemonProps>();
@@ -62,6 +73,16 @@ const Home: React.FC = () => {
   const [opacityProgress] = useState(new Animated.Value(0));
 
   const [pageCount, setPageCount] = useState(0);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Block center middle>
+          <Photo source={isGuest ? guestProfile : profile} avatar />
+        </Block>
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     if (currentPokemon !== undefined && Object.entries(currentPokemon).length !== 0) {
