@@ -45,7 +45,7 @@ const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll, onEndReached 
           </Block>
         )}
         onScroll={checkScroll}
-        onEndReachedThreshold={2}
+        onEndReachedThreshold={4}
         onEndReached={onEndReached}
         extraData={pokemonsList}
       />
