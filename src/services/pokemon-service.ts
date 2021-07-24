@@ -13,7 +13,7 @@ interface ExceptionError {
 const getAll = async (
   url = POKEAPI_URL,
   offset = 0,
-  limit = 20,
+  limit = 10,
 ): Promise<Pokemons | ExceptionError | undefined> => {
   try {
     const { data } = await api(url).get<Pokemons>(`/pokemon?offset=${offset}&limit=${limit}`);

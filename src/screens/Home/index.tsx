@@ -52,7 +52,6 @@ const Home: React.FC = () => {
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [previousPokemon, setPreviousPokemon] = useState<PokemonProps>();
   const [currentPokemon, setCurrentPokemon] = useState<PokemonProps>();
-  const [pokemonsListLength, setPokemonListLength] = useState(10);
   const [offset, setOffset] = useState(1);
 
   const [pokemonsList, setPokemonsList] = useState<Array<PokemonProps>>([]);
@@ -97,7 +96,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     getPokemons();
   }, []);
-
   const getPokemons = async () => {
     let pokemons: Array<PokemonProps> = [];
     if ((await getPokemonsFromLocalStorage(pageCount)) !== null) {
@@ -112,18 +110,17 @@ const Home: React.FC = () => {
       savePokemonsToLocalStorage(pokemons);
     }
 
-    loadPokemons(pokemons, pokemons[0].page.next);
-
-    setPageCount(pageCount + 1);
+    setTimeout(() => {
+      loadPokemons(pokemons, pokemons[0].page.next);
+      setPageCount(pageCount + 1);
+    }, 6000);
   };
 
   const getPokemonsFromPokeApi = async (): Promise<Array<PokemonProps>> => {
     const newPokemonsList: Array<PokemonProps> = [];
 
     try {
-      const pokemons: Pokemons = await pokemonService
-        .getAll(POKEAPI_URL, offset, pokemonsListLength)
-        .then();
+      const pokemons: Pokemons = await pokemonService.getAll(POKEAPI_URL, offset, 10).then();
       for (let cont = 0; cont < pokemons.results.length; cont + 1) {
         const pokemonDetail: PokemonDetail = await pokemonService
           .get(POKEAPI_URL, parseInt(getId(pokemons.results[cont]), 10))
@@ -179,7 +176,6 @@ const Home: React.FC = () => {
 
     setPokemonsList((pokemon) => [...pokemon, ...newPokemonsList]);
     updateOffsetValue(urlNextPokemons);
-    updatePokemonListLength();
 
     loadingTimeout();
   };
@@ -210,12 +206,6 @@ const Home: React.FC = () => {
       setTimeout(() => {
         setLoadingScreen(false);
       }, 1000);
-    }
-  };
-
-  const updatePokemonListLength = (): void => {
-    if (offset !== 1) {
-      setPokemonListLength(pokemonsListLength + pokemonsListLength);
     }
   };
 
@@ -333,7 +323,7 @@ const Home: React.FC = () => {
     const totalLength = event.nativeEvent.contentSize.width;
     const traveledLength = event.nativeEvent.contentOffset.x;
 
-    const pokemonIndex = Math.floor((traveledLength * pokemonsListLength) / totalLength);
+    const pokemonIndex = Math.floor((traveledLength * pokemonsList.length) / totalLength);
 
     const findPokemonIndex = pokemonsList.findIndex(
       (pokemon) => pokemon.name === currentPokemon?.name,
