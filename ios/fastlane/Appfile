@@ -1,0 +1,10 @@
+app_identifier("com.marlonmarques.pokeapp") # The bundle identifier of your app
+apple_id("marlon.belohd@gmail.com") # Your Apple email address
+
+itc_team_id("120677830") # App Store Connect Team ID
+team_id("4NUACUM4UV") # Developer Portal Team ID
+itc_team_id("120677830") # App Store Connect Team ID
+team_id("4NUACUM4UV") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
