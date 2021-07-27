@@ -1,11 +1,12 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Platform } from 'react-native';
 import Login from '../screens/Login';
 import Home from '../screens/Home';
 import { theme } from '../constants';
 import { Title } from '../components';
+import { signOut } from './utils';
 
 const Stack = createStackNavigator();
 
@@ -29,9 +30,17 @@ const Routes = () => (
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: () => <Title size={theme.sizes.h1} />,
-        }}
+          headerLeft: (props) => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                signOut(navigation);
+              }}
+            />
+          ),
+        })}
       />
     </Stack.Navigator>
   </NavigationContainer>

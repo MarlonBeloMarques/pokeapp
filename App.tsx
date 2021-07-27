@@ -11,8 +11,11 @@
 import React, { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import crashlytics from '@react-native-firebase/crashlytics';
+import codePush, { CodePushOptions } from 'react-native-code-push';
 import { Block } from './src/elements';
 import Routes from './src/routes';
+
+const codePushOptions: CodePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 
 const App = () => {
   useEffect(() => {
@@ -27,4 +30,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default codePush(codePushOptions)(App);

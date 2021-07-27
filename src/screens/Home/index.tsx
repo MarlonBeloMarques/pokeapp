@@ -5,6 +5,7 @@ import { darken } from 'polished';
 import {
   Animated,
   Dimensions,
+  ImageURISource,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -15,6 +16,7 @@ import ImageColors from 'react-native-image-colors';
 import queryString from 'query-string';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 import { Block, Button, Photo, Text } from '../../elements';
 import { theme } from '../../constants';
 import styles from './styles';
@@ -28,8 +30,8 @@ import PokemonList from '../../components/PokemonList';
 import getRealm from '../../services/realm';
 import getPokemonsFromLocalStorage from './realm';
 
-const profile = require('../../assets/images/profile.png');
-const guestProfile = require('../../assets/images/guest_profile.png');
+const guestProfile: ImageURISource = require('../../assets/images/guest_profile.png');
+const profile: ImageURISource = require('../../assets/images/profile.png');
 
 const { fs } = RNFetchBlob;
 const { width, height } = Dimensions.get('screen');
@@ -59,6 +61,7 @@ const Home: React.FC<Props> = ({ route, navigation }) => {
   const { isGuest } = route.params;
   const paddingTop = headerHeight + theme.sizes.base;
 
+  const [userProfile, setUserProfile] = useState('');
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [previousPokemon, setPreviousPokemon] = useState<PokemonProps>();
@@ -74,15 +77,34 @@ const Home: React.FC<Props> = ({ route, navigation }) => {
 
   const [pageCount, setPageCount] = useState(0);
 
+  const getProfileImage = (): string | ImageURISource => {
+    if (isGuest) {
+      return guestProfile;
+    }
+    if (userProfile.length === 0) {
+      return profile;
+    }
+    return userProfile;
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Block center middle>
-          <Photo source={isGuest ? guestProfile : profile} avatar />
+          <Photo source={getProfileImage()} avatar />
         </Block>
       ),
     });
-  }, [navigation]);
+  }, [userProfile]);
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  const onAuthStateChanged = (user: any) => {
+    setUserProfile(user.photoURL);
+  };
 
   useEffect(() => {
     if (currentPokemon !== undefined && Object.entries(currentPokemon).length !== 0) {

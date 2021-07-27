@@ -6,10 +6,13 @@ import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { darken } from 'polished';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
 import { Title, LoadingScreen } from '../../components';
 import '../../../config/Reactotron';
+import { WEB_CLIENT_ID_GOOGLE } from '@env';
 
 const { width, height } = Dimensions.get('screen');
 const minutes = 10000;
@@ -28,6 +31,16 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
   const [loadingFinished, setLoadingFinished] = useState(false);
 
   const [loadingScreen, setLoadingScreen] = useState(true);
+
+  const [loggedIn, setloggedIn] = useState(false);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: ['email'],
+      webClientId: WEB_CLIENT_ID_GOOGLE,
+      offlineAccess: true,
+    });
+  }, []);
 
   useEffect(() => {
     const showImages = async (): Promise<void> => {
@@ -108,6 +121,27 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
     return ['#FFE274', darken(0.3, '#FFE274')];
   };
 
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const { idToken } = await GoogleSignin.signIn();
+      setloggedIn(true);
+
+      const credential = auth.GoogleAuthProvider.credential(idToken);
+      await auth().signInWithCredential(credential);
+      navigation.navigate('Home', { isGuest: false });
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('Cancel');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('Signin in progress');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('PLAY_SERVICES_NOT_AVAILABLE');
+      } else {
+      }
+    }
+  };
+
   const socialButtons = (): React.ReactElement => (
     <Block
       z={10}
@@ -133,7 +167,7 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
           </Text>
         </Block>
       </Button>
-      <Button color="google" onPress={() => navigation.navigate('Home', { isGuest: false })}>
+      <Button color="google" onPress={() => signIn()}>
         <Block row center space="evenly">
           <Icon name="google" color={theme.colors.gray} size={22} />
           <Text center gray bold>
