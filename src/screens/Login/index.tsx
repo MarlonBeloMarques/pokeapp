@@ -7,12 +7,13 @@ import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/li
 import { StackNavigationProp } from '@react-navigation/stack';
 import { darken } from 'polished';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import appleAuth from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
+import { WEB_CLIENT_ID_GOOGLE } from '@env';
 import { theme } from '../../constants';
 import { Block, Button, Photo, Text } from '../../elements';
 import { Title, LoadingScreen } from '../../components';
 import '../../../config/Reactotron';
-import { WEB_CLIENT_ID_GOOGLE } from '@env';
 
 const { width, height } = Dimensions.get('screen');
 const minutes = 10000;
@@ -121,7 +122,7 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
     return ['#FFE274', darken(0.3, '#FFE274')];
   };
 
-  const signIn = async () => {
+  const signInGoogle = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const { idToken } = await GoogleSignin.signIn();
@@ -138,6 +139,43 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log('PLAY_SERVICES_NOT_AVAILABLE');
       } else {
+      }
+    }
+  };
+
+  const signInApple = async () => {
+    try {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+
+      // get current authentication state for user
+      // /!\ This method must be tested on a real device. On the iOS simulator
+      // it always throws an error.
+      const { identityToken, nonce } = appleAuthRequestResponse;
+
+      // use credentialState response to ensure the user is authenticated
+      if (identityToken) {
+        // 3). create a Firebase `AppleAuthProvider` credential
+        const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+
+        // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
+        //     in this example `signInWithCredential` is used,
+        // but you could also call `linkWithCredential`
+        //     to link the account to an existing user
+        const userCredential = await auth().signInWithCredential(appleCredential);
+
+        // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
+        console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`);
+      } else {
+        // handle this - retry?
+      }
+    } catch (error) {
+      if (error.code === appleAuth.Error.CANCELED) {
+        console.warn('User canceled Apple Sign in.');
+      } else {
+        console.error(error);
       }
     }
   };
@@ -159,7 +197,7 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
           </Text>
         </Block>
       </Button>
-      <Button color="apple" onPress={() => navigation.navigate('Home', { isGuest: false })}>
+      <Button color="apple" onPress={() => signInApple()}>
         <Block row center space="evenly">
           <Icon name="apple1" color={theme.colors.white} size={22} />
           <Text center bold>
@@ -167,7 +205,7 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
           </Text>
         </Block>
       </Button>
-      <Button color="google" onPress={() => signIn()}>
+      <Button color="google" onPress={() => signInGoogle()}>
         <Block row center space="evenly">
           <Icon name="google" color={theme.colors.gray} size={22} />
           <Text center gray bold>
