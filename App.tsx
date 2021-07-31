@@ -12,6 +12,8 @@ import React, { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import crashlytics from '@react-native-firebase/crashlytics';
 import codePush, { CodePushOptions } from 'react-native-code-push';
+import ToastMessage from 'react-native-flash-message';
+import CodePushVerification from './CodePush';
 import { Block } from './src/elements';
 import Routes from './src/routes';
 
@@ -25,6 +27,8 @@ const App = () => {
 
   return (
     <Block>
+      <CodePushVerification />
+      <ToastMessage position="top" />
       <Routes />
     </Block>
   );
