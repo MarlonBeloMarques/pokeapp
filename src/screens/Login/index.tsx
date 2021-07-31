@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import RadialGradient from 'react-native-radial-gradient';
-import { Animated, Dimensions } from 'react-native';
+
+import { Animated } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -10,12 +9,9 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import appleAuth from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import { WEB_CLIENT_ID_GOOGLE } from '@env';
-import { theme } from '../../constants';
-import { Block, Button, Photo, Text } from '../../elements';
-import { Title, LoadingScreen } from '../../components';
 import '../../../config/Reactotron';
+import Login from './Login';
 
-const { width, height } = Dimensions.get('screen');
 const minutes = 10000;
 
 interface Props {
@@ -23,7 +19,7 @@ interface Props {
   navigation: StackNavigationProp<any, any>;
 }
 
-const Login: React.FC<Props> = ({ pokemons, navigation }) => {
+const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
@@ -180,123 +176,25 @@ const Login: React.FC<Props> = ({ pokemons, navigation }) => {
     }
   };
 
-  const socialButtons = (): React.ReactElement => (
-    <Block
-      z={10}
-      absolute
-      height={height / 2.6}
-      width={width}
-      padding={theme.sizes.padding}
-      style={{ justifyContent: 'flex-end', bottom: 0 }}
-    >
-      <Button color="guest" onPress={() => navigation.navigate('Home', { isGuest: true })}>
-        <Block row center space="evenly">
-          <Icon name="user" color={theme.colors.white} size={22} />
-          <Text center bold>
-            Sign in as a guest
-          </Text>
-        </Block>
-      </Button>
-      <Button color="apple" onPress={() => signInApple()}>
-        <Block row center space="evenly">
-          <Icon name="apple1" color={theme.colors.white} size={22} />
-          <Text center bold>
-            Sign in with Apple
-          </Text>
-        </Block>
-      </Button>
-      <Button color="google" onPress={() => signInGoogle()}>
-        <Block row center space="evenly">
-          <Icon name="google" color={theme.colors.gray} size={22} />
-          <Text center gray bold>
-            Sign in with Google
-          </Text>
-        </Block>
-      </Button>
-    </Block>
-  );
-  if (loadingScreen) {
-    return <LoadingScreen visible={loadingScreen} />;
-  }
-
   return (
-    <RadialGradient
-      style={{ flex: 1 }}
-      colors={getBackgroundColors(previousColor)}
-      stops={[0.1, 0.8, 0.3, 0.75]}
-      center={[width, 250]}
-      radius={600}
-    >
-      <Block middle center>
-        <Block
-          z={10}
-          absolute
-          width={width}
-          height={height / 4}
-          padding={theme.sizes.padding}
-          style={{ top: 0 }}
-        >
-          <Block flex={false} padding={[theme.sizes.padding * 2, 0]}>
-            <Title />
-          </Block>
-        </Block>
-        <Block z={10} absolute middle center>
-          <Photo
-            source={urlImage}
-            resizeMode="contain"
-            style={{ maxWidth: width / 1.4, flex: 1 }}
-          />
-        </Block>
-        <Block
-          animated
-          flex={false}
-          style={{
-            backgroundColor: getBackgroundColors(currentColor)[1],
-            borderRadius: loadingProgress.interpolate({
-              inputRange: [0, 0.4, 0.8, 1],
-              outputRange: [100, 200, 300, 0],
-            }),
-            width: loadingProgress.interpolate({
-              inputRange: [0, 0.8, 1],
-              outputRange: [0, height, width],
-            }),
-            height: loadingProgress.interpolate({
-              inputRange: [0, 0.8, 1],
-              outputRange: [0, height, height],
-            }),
-          }}
-        >
-          {loadingFinished && (
-            <>
-              <Block
-                z={2}
-                animated
-                absolute
-                style={{
-                  backgroundColor: getBackgroundColors(currentColor)[1],
-                  opacity: opacityProgress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [1, 0],
-                  }),
-                }}
-              />
-              <RadialGradient
-                style={{ flex: 1, zIndex: 1 }}
-                colors={getBackgroundColors(currentColor)}
-                stops={[0.1, 0.8, 0.3, 0.75]}
-                center={[width, 250]}
-                radius={600}
-              />
-            </>
-          )}
-        </Block>
-        {socialButtons()}
-      </Block>
-    </RadialGradient>
+    <Login
+      pokemons={pokemons}
+      navigation={navigation}
+      urlImage={urlImage}
+      loadingScreen={loadingScreen}
+      loadingFinished={loadingFinished}
+      signInApple={signInApple}
+      signInGoogle={signInGoogle}
+      getBackgroundColors={getBackgroundColors}
+      previousColor={previousColor}
+      currentColor={currentColor}
+      loadingProgress={loadingProgress}
+      opacityProgress={opacityProgress}
+    />
   );
 };
 
-Login.defaultProps = {
+LoginContainer.defaultProps = {
   pokemons: [
     {
       id: 1,
@@ -317,4 +215,4 @@ Login.defaultProps = {
   ],
 };
 
-export default Login;
+export default LoginContainer;
