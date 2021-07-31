@@ -10,7 +10,20 @@
     "start": "NODE_ENV=development && npx react-native start --reset-cache",
     "start:prod": "NODE_ENV=production && npx react-native start --reset-cache",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx src/ --fix",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.ts?(x)": [
+      "yarn lint",
+      "prettier --write .",
+      "yarn test --findRelatedTests"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.1.2",
@@ -95,18 +108,5 @@
     "transformIgnorePatterns": [
       "node_modules/(?!@react-native|react-native)"
     ]
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx}": [
-      "eslint --ext .tsx --ext .ts src/ --fix"
-    ],
-    "./src/**": [
-      "prettier --write ."
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
