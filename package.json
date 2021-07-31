@@ -11,7 +11,9 @@
     "start:prod": "NODE_ENV=production && npx react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx src/ --fix",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "dist:ios:release": "bundle exec fastlane ios release",
+    "dist:ios:beta": "bundle exec fastlane ios beta"
   },
   "lint-staged": {
     "**/*.ts?(x)": [

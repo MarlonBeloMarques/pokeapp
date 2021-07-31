@@ -22,4 +22,11 @@ platform :ios do
     build_app(workspace: "PokeApp.xcworkspace", scheme: "PokeApp")
     upload_to_app_store
   end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    increment_build_number(xcodeproj: "PokeApp.xcodeproj")
+    build_app(workspace: "PokeApp.xcworkspace", scheme: "PokeApp")
+    upload_to_testflight
+  end
 end
