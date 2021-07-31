@@ -15,6 +15,7 @@ import { Block, Button, Text } from '../../elements';
 import PokemonList from '../../components/PokemonList';
 import { theme } from '../../constants';
 import { PokemonProps } from '.';
+import PokemonAbility from '../../services/pokemon-ability';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -51,6 +52,18 @@ const Home: React.FC<Props> = ({
 
   const paddingTop = headerHeight + theme.sizes.base;
 
+  const getEffect = (ability: PokemonAbility): string => {
+    let effect = '';
+
+    ability.effect_entries.forEach((effectEntrie) => {
+      if (effectEntrie.language.name === 'en') {
+        effect = effectEntrie.effect;
+      }
+    });
+
+    return effect;
+  };
+
   const pokemonDetails = (): React.ReactElement => (
     <Block
       z={12}
@@ -79,7 +92,7 @@ const Home: React.FC<Props> = ({
         {currentPokemon?.abilities.map((ability) => (
           <Block key={ability.id} flex={false}>
             <Text medium style={{ paddingTop: theme.sizes.caption }}>
-              {ability.effect_entries[1].effect}
+              {getEffect(ability)}
             </Text>
           </Block>
         ))}
