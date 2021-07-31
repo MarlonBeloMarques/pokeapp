@@ -1,41 +1,27 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
-import RadialGradient from 'react-native-radial-gradient';
 import { darken } from 'polished';
-import {
-  Animated,
-  Dimensions,
-  ImageURISource,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView,
-} from 'react-native';
-import { useHeaderHeight } from '@react-navigation/stack';
+import { Animated, ImageURISource, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import ImageColors from 'react-native-image-colors';
 import queryString from 'query-string';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import { Block, Button, Photo, Text } from '../../elements';
-import { theme } from '../../constants';
-import styles from './styles';
-import { LoadingScreen } from '../../components';
+import { Block, Photo } from '../../elements';
 
 import pokemonService from '../../services/pokemon-service';
 import { Pokemons, Result } from '../../services/pokemons';
 import PokemonDetail from '../../services/pokemon';
 import PokemonAbility from '../../services/pokemon-ability';
-import PokemonList from '../../components/PokemonList';
 import getRealm from '../../services/realm';
 import getPokemonsFromLocalStorage from './realm';
+import Home from './Home';
 
 const guestProfile: ImageURISource = require('../../assets/images/guest_profile.png');
 const profile: ImageURISource = require('../../assets/images/profile.png');
 
 const { fs } = RNFetchBlob;
-const { width, height } = Dimensions.get('screen');
-
 interface PokemonsPage {
   id: number;
   count: number;
@@ -56,10 +42,8 @@ interface Props {
   navigation: NavigationProp<any, any>;
 }
 
-const Home: React.FC<Props> = ({ route, navigation }) => {
-  const headerHeight = useHeaderHeight();
+const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   const { isGuest } = route.params;
-  const paddingTop = headerHeight + theme.sizes.base;
 
   const [userProfile, setUserProfile] = useState('');
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
@@ -378,120 +362,21 @@ const Home: React.FC<Props> = ({ route, navigation }) => {
     }
   };
 
-  const pokemonDetails = (): React.ReactElement => (
-    <Block
-      z={12}
-      absolute
-      height={height / 3}
-      width={width}
-      padding={theme.sizes.padding}
-      style={{ justifyContent: 'flex-end', bottom: 0 }}
-    >
-      <Block flex={false} row margin={[0, 0, theme.sizes.padding, 0]}>
-        {currentPokemon?.detail.abilities.map((ability) => (
-          <Block key={ability.ability.url} flex={false}>
-            <Button
-              shadow
-              style={[
-                { backgroundColor: getBackgroundColors(currentColor)[0] },
-                styles.buttonDetail,
-              ]}
-            >
-              <Text>{ability.ability.name}</Text>
-            </Button>
-          </Block>
-        ))}
-      </Block>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {currentPokemon?.abilities.map((ability) => (
-          <Block key={ability.id} flex={false}>
-            <Text medium style={{ paddingTop: theme.sizes.caption }}>
-              {ability.effect_entries[1].effect}
-            </Text>
-          </Block>
-        ))}
-      </ScrollView>
-    </Block>
-  );
-  if (loadingScreen) {
-    return <LoadingScreen visible={loadingScreen} />;
-  }
-
   return (
-    <RadialGradient
-      style={{ flex: 1 }}
-      colors={getBackgroundColors(previousColor)}
-      stops={[0.1, 0.8, 0.3, 0.75]}
-      center={[width, 250]}
-      radius={600}
-    >
-      <Block middle center>
-        <Block
-          z={10}
-          absolute
-          width={width}
-          height={height / 4}
-          padding={theme.sizes.padding}
-          style={{ top: 0 }}
-        >
-          <Block flex={false} padding={[paddingTop, 0, 0, 0]}>
-            <Text bold h1>
-              {currentPokemon?.name}
-            </Text>
-          </Block>
-        </Block>
-        <Block
-          flex={false}
-          animated
-          style={{
-            backgroundColor: getBackgroundColors(currentColor)[1],
-            borderRadius: loadingProgress.interpolate({
-              inputRange: [0, 0.4, 0.8, 1],
-              outputRange: [100, 200, 300, 0],
-            }),
-            width: loadingProgress.interpolate({
-              inputRange: [0, 0.8, 1],
-              outputRange: [0, height, width],
-            }),
-            height: loadingProgress.interpolate({
-              inputRange: [0, 0.8, 1],
-              outputRange: [0, height, height],
-            }),
-          }}
-        >
-          {loadingFinished && (
-            <>
-              <Block
-                z={2}
-                animated
-                absolute
-                style={{
-                  backgroundColor: getBackgroundColors(currentColor)[1],
-                  opacity: opacityProgress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [1, 0],
-                  }),
-                }}
-              />
-              <RadialGradient
-                style={{ flex: 1, zIndex: 1 }}
-                colors={getBackgroundColors(currentColor)}
-                stops={[0.1, 0.8, 0.3, 0.75]}
-                center={[width, 250]}
-                radius={600}
-              />
-            </>
-          )}
-        </Block>
-        <PokemonList
-          pokemonsList={pokemonsList}
-          checkScroll={checkScroll}
-          onEndReached={getPokemons}
-        />
-        {pokemonDetails()}
-      </Block>
-    </RadialGradient>
+    <Home
+      getPokemons={getPokemons}
+      checkScroll={checkScroll}
+      pokemonsList={pokemonsList}
+      loadingProgress={loadingProgress}
+      opacityProgress={opacityProgress}
+      loadingScreen={loadingScreen}
+      loadingFinished={loadingFinished}
+      currentPokemon={currentPokemon}
+      previousColor={previousColor}
+      currentColor={currentColor}
+      getBackgroundColors={getBackgroundColors}
+    />
   );
 };
 
-export default Home;
+export default HomeContainer;
