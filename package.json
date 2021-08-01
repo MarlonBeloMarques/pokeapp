@@ -13,7 +13,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx src/ --fix",
     "precommit": "lint-staged",
     "dist:ios:release": "bundle exec fastlane ios release",
-    "dist:ios:beta": "bundle exec fastlane ios beta"
+    "dist:ios:beta": "bundle exec fastlane ios beta",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "**/*.ts?(x)": [
@@ -21,11 +22,6 @@
       "prettier --write .",
       "yarn test --findRelatedTests"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.1.2",
@@ -84,7 +80,7 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^6.0.0",
+    "husky": "^7.0.0",
     "jest": "^26.6.3",
     "lint-staged": "^11.0.0",
     "metro-react-native-babel-preset": "^0.64.0",
