@@ -107,15 +107,19 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
   ): Array<string | undefined> => {
+    const colorsDefault = ['#FFE274', darken(0.3, '#FFE274')];
+
     if (colorImage !== undefined) {
       if (colorImage.platform === 'ios') {
         return [colorImage.background, darken(0.3, colorImage.background)];
       }
 
-      return [colorImage.average, darken(0.3, colorImage.average)];
+      return colorImage.average
+        ? [colorImage.average, darken(0.3, colorImage.average)]
+        : colorsDefault;
     }
 
-    return ['#FFE274', darken(0.3, '#FFE274')];
+    return colorsDefault;
   };
 
   const signInGoogle = async () => {
@@ -127,14 +131,15 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
       const credential = auth.GoogleAuthProvider.credential(idToken);
       await auth().signInWithCredential(credential);
       navigation.navigate('Home', { isGuest: false });
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    } catch ({ code }: typeof statusCodes | Error | unknown) {
+      if (code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('Cancel');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
+      } else if (code === statusCodes.IN_PROGRESS) {
         console.log('Signin in progress');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      } else if (code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log('PLAY_SERVICES_NOT_AVAILABLE');
       } else {
+        console.log('Other error');
       }
     }
   };
@@ -167,11 +172,11 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
       } else {
         // handle this - retry?
       }
-    } catch (error) {
-      if (error.code === appleAuth.Error.CANCELED) {
+    } catch ({ code }: typeof appleAuth.Error | Error | unknown) {
+      if (code === appleAuth.Error.CANCELED) {
         console.warn('User canceled Apple Sign in.');
       } else {
-        console.error(error);
+        console.error(code);
       }
     }
   };

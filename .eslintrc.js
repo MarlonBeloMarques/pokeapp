@@ -43,7 +43,19 @@ module.exports = {
     'object-curly-newline': 'off',
     'global-require': 'off',
     'react/jsx-props-no-spreading': 'off',
-    
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        extendDefaults: true,
+        types: {
+          '{}': false,
+        },
+      },
+    ],
+    '@typescript-eslint/no-var-requires': 0,
+    camelcase: 'off',
+    'no-console': 'off',
+    "no-param-reassign": 'off'
   },
   settings: {
     'import/resolver': {
