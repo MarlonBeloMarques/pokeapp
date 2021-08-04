@@ -8,6 +8,8 @@ import queryString from 'query-string';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { UpdateMode } from 'realm';
 import { Block, Photo } from '../../elements';
 
 import pokemonService from '../../services/pokemon-service';
@@ -17,12 +19,19 @@ import PokemonAbility from '../../services/pokemon-ability';
 import getRealm from '../../services/realm';
 import getPokemonsFromLocalStorage from './realm';
 import Home from './Home';
+import {
+  AbilitySchema,
+  EffectEntriesSchema,
+  PokemonSchema,
+  PokemonsPageSchema,
+  TypeSchema,
+} from '../../schemas';
 
 const guestProfile: ImageURISource = require('../../assets/images/guest_profile.png');
 const profile: ImageURISource = require('../../assets/images/profile.png');
 
 const { fs } = RNFetchBlob;
-interface PokemonsPage {
+export interface PokemonsPage {
   id: number;
   count: number;
   next: string;
@@ -37,8 +46,13 @@ export interface PokemonProps extends Result {
   page: PokemonsPage;
 }
 
+type ParamList = {
+  Home: {
+    isGuest: HomeProps;
+  };
+};
 interface Props {
-  route: RouteProp<any, any>;
+  route: RouteProp<ParamList, 'Home'>;
   navigation: NavigationProp<any, any>;
 }
 
@@ -87,7 +101,8 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   }, []);
 
   const onAuthStateChanged = (user: any) => {
-    setUserProfile(user.photoURL);
+    const { photoUrl } = user as { photoUrl: string };
+    setUserProfile(photoUrl);
   };
 
   useEffect(() => {
@@ -125,12 +140,12 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   }, []);
   const getPokemons = async () => {
     let pokemons: Array<PokemonProps> = [];
-    if ((await getPokemonsFromLocalStorage(pageCount)) !== null) {
+    if ((await getPokemonsFromLocalStorage(pageCount)).length !== 0) {
       pokemons = await getPokemonsFromLocalStorage(pageCount);
     } else {
       pokemons = await getPokemonsFromPokeApi();
 
-      saveDataToLocalStorage('PokemonsPage', {
+      saveDataToLocalStorage(PokemonsPageSchema, {
         ...pokemons[0].page,
         pokemons,
       });
@@ -155,7 +170,7 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
 
         const pokemonAbilitiesList = await getPokemonAbilities(pokemonDetail);
 
-        setPokemonTypesId(pokemonDetail);
+        await setPokemonTypesId(pokemonDetail);
 
         const imageUrl = getImageUrl(parseInt(getId(pokemons.results[cont]), 10));
 
@@ -173,7 +188,10 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
 
         cont += 1;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      crashlytics().recordError(error);
+    }
 
     return newPokemonsList;
   };
@@ -216,15 +234,23 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
 
   const savePokemonsToLocalStorage = (pokemons: Array<PokemonProps>): void => {
     pokemons.forEach((pokemonData) => {
-      saveDataToLocalStorage('Pokemon', pokemonData);
+      saveDataToLocalStorage(PokemonSchema, pokemonData);
     });
   };
 
-  const saveDataToLocalStorage = async (schemaName: string, data: any): Promise<void> => {
+  const saveDataToLocalStorage = async (
+    schema:
+      | typeof PokemonSchema
+      | typeof PokemonsPageSchema
+      | typeof TypeSchema
+      | typeof AbilitySchema
+      | typeof EffectEntriesSchema,
+    data: any,
+  ): Promise<void> => {
     const realm = await getRealm();
 
     realm.write(() => {
-      realm.create(schemaName, data, 'modified');
+      realm.create(schema.schema.name, data, UpdateMode.Modified);
     });
   };
 
@@ -246,25 +272,40 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
     setOffset(parseInt(offsetValue || offset.toString(), 10));
   };
 
-  const setPokemonTypesId = (pokemonDetail: PokemonDetail): void => {
+  const setPokemonTypesId = async (pokemonDetail: PokemonDetail): Promise<void> => {
     for (let contTypes = 0; contTypes < pokemonDetail.types.length; contTypes + 1) {
-      setIdToSaveToLocalStorage(pokemonDetail.types[contTypes], 'Type', 'id');
-      saveDataToLocalStorage('Type', pokemonDetail.types[contTypes]);
+      pokemonDetail.types[contTypes].id = await getIdToSaveToLocalStorage(
+        pokemonDetail.types[contTypes],
+        TypeSchema,
+        'id',
+      );
+      saveDataToLocalStorage(TypeSchema, pokemonDetail.types[contTypes]);
 
       contTypes += 1;
     }
   };
 
-  const setIdToSaveToLocalStorage = async <T, K extends keyof T>(
+  const getIdToSaveToLocalStorage = async <T, K extends keyof T>(
     object: T,
-    schemaName: string,
+    schema:
+      | typeof PokemonSchema
+      | typeof PokemonsPageSchema
+      | typeof TypeSchema
+      | typeof AbilitySchema
+      | typeof EffectEntriesSchema,
     primaryKey: K,
-  ): Promise<void> => {
+  ): Promise<number> => {
     const realm = await getRealm();
 
-    const lastObject = realm.objects(schemaName).sorted(primaryKey.toString(), true)[0];
-    const highestId: number = lastObject == null ? 0 : lastObject[primaryKey];
-    object[primaryKey] = highestId == null ? 1 : highestId + 1;
+    const results: Realm.Results<T> = realm.objects(schema.schema.name);
+    const lastObject = results.sorted(primaryKey.toString(), true)[0];
+
+    const highestId = lastObject == null ? 0 : lastObject[primaryKey];
+    if (highestId as T[K]) {
+      return (highestId as number) + 1;
+    }
+
+    return 1;
   };
 
   const getPokemonAbilities = async (
@@ -275,8 +316,12 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
     for (let contAbilities = 0; contAbilities < pokemonDetail.abilities.length; contAbilities + 1) {
       const abilityId = getAbilityId(pokemonDetail.abilities[contAbilities].ability.url);
 
-      setIdToSaveToLocalStorage(pokemonDetail.abilities[contAbilities], 'Ability', 'id');
-      saveDataToLocalStorage('Ability', pokemonDetail.abilities[contAbilities]);
+      pokemonDetail.abilities[contAbilities].id = await getIdToSaveToLocalStorage(
+        pokemonDetail.abilities[contAbilities],
+        AbilitySchema,
+        'id',
+      );
+      saveDataToLocalStorage(AbilitySchema, pokemonDetail.abilities[contAbilities]);
 
       const pokemonAbility: PokemonAbility = await pokemonService
         .getAbility(POKEAPI_URL, parseInt(abilityId, 10))
@@ -287,12 +332,15 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
         contEffectEntries < pokemonAbility.effect_entries.length;
         contEffectEntries + 1
       ) {
-        setIdToSaveToLocalStorage(
+        pokemonAbility.effect_entries[contEffectEntries].id = await getIdToSaveToLocalStorage(
           pokemonAbility.effect_entries[contEffectEntries],
-          'EffectEntries',
+          EffectEntriesSchema,
           'id',
         );
-        saveDataToLocalStorage('EffectEntries', pokemonAbility.effect_entries[contEffectEntries]);
+        saveDataToLocalStorage(
+          EffectEntriesSchema,
+          pokemonAbility.effect_entries[contEffectEntries],
+        );
 
         contEffectEntries += 1;
       }
@@ -335,15 +383,19 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   const getBackgroundColors = (
     colorImage: IOSImageColors | AndroidImageColors | undefined,
   ): Array<string | undefined> => {
+    const colorsDefault = ['#82BF96', darken(0.3, '#82BF96')];
+
     if (colorImage !== undefined) {
       if (colorImage.platform === 'ios') {
         return [colorImage.background, darken(0.3, colorImage.background)];
       }
 
-      return [colorImage.average, darken(0.3, colorImage.average)];
+      return colorImage.average
+        ? [colorImage.average, darken(0.3, colorImage.average)]
+        : colorsDefault;
     }
 
-    return ['#82BF96', darken(0.3, '#82BF96')];
+    return colorsDefault;
   };
 
   const checkScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {

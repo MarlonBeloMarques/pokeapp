@@ -1,22 +1,23 @@
 import PokemonDetail from '../../services/pokemon';
 import PokemonAbility from '../../services/pokemon-ability';
 import getRealm from '../../services/realm';
-import { PokemonProps } from '.';
+import { PokemonProps, PokemonsPage } from '.';
 
-const getPokemonsFromLocalStorage = async (
-  pagePosition = 0,
-): Promise<Array<PokemonProps> | null> => {
+interface Pokemon extends PokemonsPage {
+  pokemons: Array<PokemonProps>;
+}
+
+const getPokemonsFromLocalStorage = async (pagePosition = 0): Promise<Array<PokemonProps>> => {
   const realm = await getRealm();
 
-  console.tron.log(realm.path);
+  console.log(realm.path);
 
   const pokemonsData: Array<PokemonProps> = [];
 
   try {
-    const resultsRealm = realm.objects('PokemonsPage');
+    const resultsRealm: Realm.Results<Pokemon> = realm.objects('PokemonsPage');
 
     const { pokemons } = resultsRealm[pagePosition];
-
     if (pokemons.map((pokemonElement) => pokemonElement.image_url).length !== 0) {
       pokemons.forEach((pokemonElement) => {
         pokemonsData.push({
@@ -34,11 +35,9 @@ const getPokemonsFromLocalStorage = async (
           },
         });
       });
-
-      console.tron.log(pokemonsData);
     }
   } catch (error) {
-    return null;
+    return [];
   }
 
   return pokemonsData;
