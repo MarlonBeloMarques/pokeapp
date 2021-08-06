@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Animated, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RadialGradient from 'react-native-radial-gradient';

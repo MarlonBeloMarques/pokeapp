@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Image, Animated, LayoutChangeEvent, ImageURISource } from 'react-native';
 import { styles } from './styles';
 

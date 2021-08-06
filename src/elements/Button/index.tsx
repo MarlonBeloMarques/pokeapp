@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 
 import { theme } from '../../constants';

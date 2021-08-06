@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { darken } from 'polished';
 import { Animated, ImageURISource, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';

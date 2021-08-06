@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Appearance, Modal } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { Block } from '../../elements';

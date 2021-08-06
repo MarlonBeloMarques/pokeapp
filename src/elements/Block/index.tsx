@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { LayoutChangeEvent, StyleSheet, View, Animated } from 'react-native';
 
 import { backgroundColors, styles } from './styles';
