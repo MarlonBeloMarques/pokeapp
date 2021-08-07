@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import * as React from 'react';
 import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { Block, Photo } from '../../elements';
 import PokemonAbility from '../../services/pokemon-ability';
@@ -13,7 +14,7 @@ interface Props {
   onEndReached: () => {};
 }
 
-interface PokemonProps extends Result {
+export interface PokemonProps extends Result {
   image: string;
   image_url: string;
   detail: PokemonDetail;
