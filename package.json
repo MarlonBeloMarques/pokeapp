@@ -128,6 +128,7 @@
       "./__mocks__/react-native-firebase.ts",
       "./__mocks__/react-navigation.ts",
       "./__mocks__/react-native-dotenv.ts",
+      "./__mocks__/react-native-platform.ts",
       "./node_modules/react-native-gesture-handler/jestSetup.js"
     ]
   }

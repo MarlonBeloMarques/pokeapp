@@ -1,8 +1,10 @@
 import * as React from 'react';
 import renderer from 'react-test-renderer';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import Home from '../../Home';
+import { Animated, NativeScrollEvent, NativeSyntheticEvent, Text } from 'react-native';
+import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
+import HomeContainer from '../../Home';
+import Home from '../../Home/Home';
 import PokemonList, { PokemonProps } from '../../../components/PokemonList';
 import PokemonListMock from '../fixtures/pokemons-list';
 
@@ -36,7 +38,9 @@ describe('scroll list', () => {
       navigation: NavigationPropMock,
     };
 
-    const rendered = renderer.create(React.createElement(Home, { ...mockedParams })).toJSON();
+    const rendered = renderer
+      .create(React.createElement(HomeContainer, { ...mockedParams }))
+      .toJSON();
     expect(rendered).toBeTruthy();
   });
 
@@ -50,5 +54,34 @@ describe('scroll list', () => {
     const rendered = renderer.create(React.createElement(PokemonList, { ...mockedProps }));
     const { pokemonsList } = rendered.root.props;
     expect((pokemonsList as Array<PokemonProps>).length > 0).toBe(true);
+  });
+
+  it('is getting the initial pokémon information correctly', () => {
+    const colorsMocked: ImageColorsResult = {
+      background: '',
+      primary: '',
+      secondary: '',
+      detail: '',
+      quality: 'lowest',
+      platform: 'ios',
+    };
+
+    const mockedParams = {
+      currentPokemon: PokemonListMock[0],
+      loadingScreen: false,
+      loadingFinished: false,
+      currentColor: colorsMocked,
+      previousColor: colorsMocked,
+      loadingProgress: new Animated.Value(0),
+      opacityProgress: new Animated.Value(0),
+      pokemonsList: PokemonListMock,
+      checkScroll: () => {},
+      getPokemons: () => ({}),
+      getBackgroundColors: () => [],
+    };
+    const rendered = renderer.create(React.createElement(Home, { ...mockedParams }));
+    const { root } = rendered;
+    expect(root.props.loadingScreen).toBe(false);
+    expect((root.findAllByType(Text)[0].props.children as string).length !== 0).toBe(true);
   });
 });
