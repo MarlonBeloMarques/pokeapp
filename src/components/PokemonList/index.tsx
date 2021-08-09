@@ -27,6 +27,7 @@ const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll, onEndReached 
   return (
     <Block z={11} absolute width={width} height={height}>
       <FlatList
+        testID="flat-list"
         ref={flatListRef}
         horizontal
         pagingEnabled

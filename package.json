@@ -61,6 +61,8 @@
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.14.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@testing-library/jest-native": "^4.0.2",
+    "@testing-library/react-native": "^7.2.0",
     "@types/jest": "^26.0.24",
     "@types/react-native": "^0.64.5",
     "@types/react-native-vector-icons": "^6.4.7",
@@ -95,6 +97,7 @@
   },
   "jest": {
     "preset": "react-native",
+    "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -128,7 +131,7 @@
       "./__mocks__/react-native-firebase.ts",
       "./__mocks__/react-navigation.ts",
       "./__mocks__/react-native-dotenv.ts",
-      "./__mocks__/react-native-platform.ts",
+      "./__mocks__/react-native-utilities.ts",
       "./node_modules/react-native-gesture-handler/jestSetup.js"
     ]
   }

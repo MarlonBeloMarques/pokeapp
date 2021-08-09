@@ -1,8 +1,16 @@
 import * as React from 'react';
 import renderer from 'react-test-renderer';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { Animated, NativeScrollEvent, NativeSyntheticEvent, Text } from 'react-native';
+import {
+  Animated,
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Text,
+  View,
+} from 'react-native';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
+import { render, fireEvent } from '@testing-library/react-native';
 import HomeContainer from '../../Home';
 import Home from '../../Home/Home';
 import PokemonList, { PokemonProps } from '../../../components/PokemonList';
@@ -26,7 +34,7 @@ interface PropsList {
 
 describe('scroll list', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.useFakeTimers('legacy');
   });
 
   it('renders correctly', () => {
@@ -83,5 +91,36 @@ describe('scroll list', () => {
     const { root } = rendered;
     expect(root.props.loadingScreen).toBe(false);
     expect((root.findAllByType(Text)[0].props.children as string).length !== 0).toBe(true);
+  });
+
+  it('when it reaches the end of the list, it will call the function to get pokemons', () => {
+    const onEndReached = jest.fn();
+
+    const mockedProps: PropsList = {
+      pokemonsList: PokemonListMock,
+      checkScroll: () => {},
+      onEndReached,
+    };
+
+    const { getByTestId } = render(React.createElement(PokemonList, mockedProps));
+
+    const eventData = {
+      nativeEvent: {
+        contentOffset: {
+          x: 500,
+        },
+        contentSize: {
+          height: 500,
+          width: 500,
+        },
+        layoutMeasurement: {
+          height: 500,
+          width: 500,
+        },
+      },
+    };
+
+    fireEvent.scroll(getByTestId('flat-list'), eventData);
+    expect(onEndReached).toHaveBeenCalled();
   });
 });
