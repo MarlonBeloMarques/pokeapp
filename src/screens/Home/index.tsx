@@ -80,7 +80,7 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
     if (isGuest) {
       return guestProfile;
     }
-    if (userProfile.length === 0) {
+    if ((typeof userProfile === 'string' && userProfile.length === 0) || userProfile == null) {
       return profile;
     }
     return userProfile;
@@ -102,7 +102,7 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   }, []);
 
   const onAuthStateChanged = (user: any) => {
-    const { photoUrl } = user as { photoUrl: string };
+    const { photoUrl } = user;
     setUserProfile(photoUrl);
   };
 
