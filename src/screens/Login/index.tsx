@@ -169,6 +169,8 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
 
         // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
         console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`);
+
+        navigation.navigate('Home', { isGuest: false });
       } else {
         // handle this - retry?
       }
