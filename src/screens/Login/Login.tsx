@@ -43,11 +43,12 @@ const Login: React.FC<Props> = ({
   const socialButtons = (): React.ReactElement => (
     <Block
       z={10}
+      middle
       absolute
       height={height / 2.6}
       width={width}
       padding={theme.sizes.padding}
-      style={{ justifyContent: 'flex-end', bottom: 0 }}
+      style={{ bottom: 0 }}
     >
       <Button color="guest" onPress={() => navigation.navigate('Home', { isGuest: true })}>
         <Block row center space="evenly">
