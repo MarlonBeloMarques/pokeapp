@@ -92,20 +92,20 @@ const Login: React.FC<Props> = ({
           z={10}
           absolute
           width={width}
-          height={height / 4}
+          height={height}
           padding={theme.sizes.padding}
           style={{ top: 0 }}
         >
-          <Block flex={false} padding={[theme.sizes.padding * 2, 0]}>
+          <Block flex={0.1} padding={[theme.sizes.padding * 2, 0]}>
             <Title />
           </Block>
-        </Block>
-        <Block z={10} absolute middle center>
-          <Photo
-            source={urlImage}
-            resizeMode="contain"
-            style={{ maxWidth: width / 1.4, flex: 1 }}
-          />
+          <Block flex={0.5} middle center>
+            <Photo
+              source={urlImage}
+              resizeMode="contain"
+              style={{ maxWidth: (width * height) / (width * 3) }}
+            />
+          </Block>
         </Block>
         <Block
           animated
