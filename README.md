@@ -51,7 +51,14 @@ For you to configure Code Push you will need to create an account and configure 
 To make the publishing and authoring process easier, you will need to set up your environment, check *[these steps](https://www.cloudbees.com/blog/react-native-developer-series-ios-and-android-fastlane-setup-and-certificates)*.
 
 ## Configuration
+#### If you've gone through the prerequisites phase, then it's almost all ready, we just need to reinforce that it's all set up.
 
+- In your project's Firebase Console, download the `GoogleService-Info.plist` file and add it to the root of the **ios** folder.
+- Check the `.env.development` and `.env.production` files and add in **WEB_CLIENT_ID_GOOGLE** add your **key** which can be found in `GoogleService-Info.plist`.
+- Still in `GoogleService-Info.plist`, get the key **REVERSED_CLIENT_ID** and add it to `Info.plist` in the **URL Types** area, in the **URL Schemes** field.
+- With the CodePush key in hand, add inside your `Info.plist` a new key named **CodePushDeploymentKey** and the key you got.
+
+Reinforcing what was done during the prerequisites, you should be able to configure your project without any problems.
 ## Build
 
 ## Contact
