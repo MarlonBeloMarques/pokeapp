@@ -61,5 +61,22 @@ To make the publishing and authoring process easier, you will need to set up you
 Reinforcing what was done during the prerequisites, you should be able to configure your project without any problems.
 ## Build
 
+With fastlane building the application becomes easier. If you passed the prerequisites. must have seen something about *[fastlane match](https://docs.fastlane.tools/actions/match/)*.
+
+You can use the traditional way to build PokeApp or run the following command:
+````
+fastlane ios release
+````
+Push a new release build to the App Store
+
+````
+fastlane ios beta
+````
+Push a new beta build to TestFlight
+
 ## Contact
 
+You still have any doubts, or need to talk to me, you can find me here:
+
+- Instagram: [@marlomarquesbr](https://www.instagram.com/marlonmarqsbr/)
+- Linkedin: [Marlon Marques](https://www.linkedin.com/in/marlon-marques-0b509813b/)
