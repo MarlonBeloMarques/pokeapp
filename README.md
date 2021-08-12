@@ -39,8 +39,16 @@ This README will cover a little about the main tools used as well as running Pok
 If you have no idea how to install React Native and run it locally, check this *[Get started](https://archive.reactnative.dev/docs/getting-started)*.
 
 ### Firebase
+
+PokeApp uses Firebase Analytics, Crashlytics and Auth, if you have no idea how to create a Firebase account and configure it, *[Start here](https://rnfirebase.io/)*.
+
 ### CodePush
-### Apple Developer
+
+For you to configure Code Push you will need to create an account and configure your environment, to help you, you can *[Start here](https://docs.microsoft.com/en-us/appcenter/distribution/codepush/)*.
+
+### Fastlane
+
+To make the publishing and authoring process easier, you will need to set up your environment, check *[these steps](https://www.cloudbees.com/blog/react-native-developer-series-ios-and-android-fastlane-setup-and-certificates)*.
 
 ## Configuration
 
