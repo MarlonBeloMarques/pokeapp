@@ -12,7 +12,7 @@ PokeApp
   </a>
 </p>
 
-PokeApp has been tested and configured for IOS devices only. You can download it from the App Store or configure locally.
+PokeApp has been tested and configured for IOS devices only.
 
 Get access to a huge list of pokemons with images and characteristics and the best thing is, after loading the pokemons you don't need internet anymore to see your pokemons.
 
