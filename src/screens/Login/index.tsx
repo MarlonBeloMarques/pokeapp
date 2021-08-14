@@ -114,8 +114,8 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
         return [colorImage.background, darken(0.3, colorImage.background)];
       }
 
-      return colorImage.average
-        ? [colorImage.average, darken(0.3, colorImage.average)]
+      return colorImage.dominant
+        ? [colorImage.dominant, darken(0.3, colorImage.dominant)]
         : colorsDefault;
     }
 
