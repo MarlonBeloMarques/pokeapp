@@ -97,7 +97,7 @@ const Login: React.FC<Props> = ({
           padding={theme.sizes.padding}
           style={{ top: 0 }}
         >
-          <Block flex={0.1} padding={[theme.sizes.padding * 2, 0]}>
+          <Block flex={0.1} padding={[theme.sizes.padding * 2, 0, theme.sizes.base, 0]}>
             <Title />
           </Block>
           <Block flex={0.5} middle center>
