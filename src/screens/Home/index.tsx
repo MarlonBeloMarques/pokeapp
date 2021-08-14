@@ -415,8 +415,11 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   const checkScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const totalLength = event.nativeEvent.contentSize.width;
     const traveledLength = event.nativeEvent.contentOffset.x;
+    const addLengthTraveled = 50;
 
-    const pokemonIndex = Math.floor((traveledLength * pokemonsList.length) / totalLength);
+    const pokemonIndex = Math.floor(
+      ((traveledLength + addLengthTraveled) * pokemonsList.length) / totalLength,
+    );
 
     const findPokemonIndex = pokemonsList.findIndex(
       (pokemon) => pokemon.name === currentPokemon?.name,
