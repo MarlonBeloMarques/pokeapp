@@ -2,7 +2,13 @@ import * as React from 'react';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { darken } from 'polished';
-import { Animated, ImageURISource, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import {
+  Animated,
+  ImageURISource,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+} from 'react-native';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import ImageColors from 'react-native-image-colors';
 import queryString from 'query-string';
@@ -27,6 +33,7 @@ import {
   PokemonsPageSchema,
   TypeSchema,
 } from '../../schemas';
+import { theme } from '../../constants';
 
 const guestProfile: ImageURISource = require('../../assets/images/guest_profile.png');
 const profile: ImageURISource = require('../../assets/images/profile.png');
@@ -89,7 +96,11 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Block center middle>
+        <Block
+          center
+          middle
+          style={{ paddingRight: Platform.OS === 'android' ? theme.sizes.base : 0 }}
+        >
           <Photo source={getProfileImage()} avatar />
         </Block>
       ),

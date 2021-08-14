@@ -31,6 +31,7 @@ const Routes = () => (
         name="Home"
         component={Home}
         options={({ navigation }) => ({
+          headerTitleAlign: 'center',
           headerTitle: () => <Title size={theme.sizes.h1} />,
           headerLeft: (props) => (
             <HeaderBackButton
