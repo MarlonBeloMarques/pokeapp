@@ -8,6 +8,7 @@ import com.reactnativeimagecolors.ImageColorsPackage;
 import com.surajit.rnrg.RNRadialGradientPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -26,6 +27,11 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
+
+import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
+import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -48,12 +54,17 @@ public class MainApplication extends Application implements ReactApplication {
             new RNRadialGradientPackage(),
             new SplashScreenReactPackage(),
             new LottiePackage(),
+            new RNGoogleSigninPackage(),
             new SafeAreaContextPackage(),
             new RNScreensPackage(),
             new RNGestureHandlerPackage(),
             new RealmReactPackage(),
             new RNFetchBlobPackage(),
             new AsyncStoragePackage(),
+                    new ReactNativeFirebaseAppPackage(),
+                    new ReactNativeFirebaseAnalyticsPackage(),
+                    new ReactNativeFirebaseCrashlyticsPackage(),
+                    new ReactNativeFirebaseAuthPackage(),
             );
         }
 
