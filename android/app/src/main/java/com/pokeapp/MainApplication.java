@@ -65,12 +65,18 @@ public class MainApplication extends Application implements ReactApplication {
                     new ReactNativeFirebaseAnalyticsPackage(),
                     new ReactNativeFirebaseCrashlyticsPackage(),
                     new ReactNativeFirebaseAuthPackage(),
+                    new CodePush("your-key", MainApplication.this, BuildConfig.DEBUG)
             );
         }
 
         @Override
         protected String getJSMainModuleName() {
           return "index";
+        }
+
+        @Override
+        protected String getJSBundleFile() {
+            return CodePush.getJSBundleFile();
         }
       };
 
