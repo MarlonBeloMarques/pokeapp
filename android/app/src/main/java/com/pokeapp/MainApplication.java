@@ -4,6 +4,17 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.reactnativeimagecolors.ImageColorsPackage;
+import com.surajit.rnrg.RNRadialGradientPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.airbnb.android.react.lottie.LottiePackage;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
+import com.swmansion.rnscreens.RNScreensPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import io.realm.react.RealmReactPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.facebook.react.shell.MainReactPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.airbnb.android.react.lottie.LottiePackage;
@@ -13,6 +24,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -30,7 +42,19 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-          return packages;
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+            new ImageColorsPackage(),
+            new RNRadialGradientPackage(),
+            new SplashScreenReactPackage(),
+            new LottiePackage(),
+            new SafeAreaContextPackage(),
+            new RNScreensPackage(),
+            new RNGestureHandlerPackage(),
+            new RealmReactPackage(),
+            new RNFetchBlobPackage(),
+            new AsyncStoragePackage(),
+            );
         }
 
         @Override
