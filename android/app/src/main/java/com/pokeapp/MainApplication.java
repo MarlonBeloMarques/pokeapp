@@ -50,6 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new AppleAuthenticationAndroidPackage(),
             new ImageColorsPackage(),
             new RNRadialGradientPackage(),
             new SplashScreenReactPackage(),

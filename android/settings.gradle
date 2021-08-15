@@ -1,4 +1,6 @@
 rootProject.name = 'PokeApp'
+include ':@invertase_react-native-apple-authentication'
+project(':@invertase_react-native-apple-authentication').projectDir = new File(rootProject.projectDir, '../node_modules/@invertase/react-native-apple-authentication/android')
 include ':react-native-image-colors'
 project(':react-native-image-colors').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-colors/android')
 include ':react-native-radial-gradient'

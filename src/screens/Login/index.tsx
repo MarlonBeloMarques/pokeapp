@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { Animated } from 'react-native';
+import { Animated, Platform } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { darken } from 'polished';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import appleAuth from '@invertase/react-native-apple-authentication';
+import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import { WEB_CLIENT_ID_GOOGLE } from '@env';
 import '../../../config/Reactotron';
@@ -146,33 +146,45 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
 
   const signInApple = async () => {
     try {
-      const appleAuthRequestResponse = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-      });
+      if (Platform.OS === 'android') {
+        appleAuthAndroid.configure({
+          clientId: 'your-client-id',
+          redirectUri: 'your-redirectUri',
+        });
 
-      // get current authentication state for user
-      // /!\ This method must be tested on a real device. On the iOS simulator
-      // it always throws an error.
-      const { identityToken, nonce } = appleAuthRequestResponse;
+        const response = await appleAuthAndroid.signIn();
 
-      // use credentialState response to ensure the user is authenticated
-      if (identityToken) {
-        // 3). create a Firebase `AppleAuthProvider` credential
-        const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+        console.log(response);
+      } else if (Platform.OS === 'ios') {
+        const appleAuthRequestResponse = await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+        });
 
-        // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
-        //     in this example `signInWithCredential` is used,
-        // but you could also call `linkWithCredential`
-        //     to link the account to an existing user
-        const userCredential = await auth().signInWithCredential(appleCredential);
+        // get current authentication state for user
+        // /!\ This method must be tested on a real device. On the iOS simulator
+        // it always throws an error.
+        const { identityToken, nonce } = appleAuthRequestResponse;
 
-        // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
-        console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`);
+        // use credentialState response to ensure the user is authenticated
+        if (identityToken) {
+          // 3). create a Firebase `AppleAuthProvider` credential
+          const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
 
-        navigation.navigate('Home', { isGuest: false });
-      } else {
-        // handle this - retry?
+          // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
+          //     in this example `signInWithCredential` is used,
+          // but you could also call `linkWithCredential`
+          //     to link the account to an existing user
+          const userCredential = await auth().signInWithCredential(appleCredential);
+
+          // user is now signed in, any Firebase `onAuthStateChanged`
+          // listeners you have will trigger
+          console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`);
+
+          navigation.navigate('Home', { isGuest: false });
+        } else {
+          // handle this - retry?
+        }
       }
     } catch ({ code }: typeof appleAuth.Error | Error | unknown) {
       if (code === appleAuth.Error.CANCELED) {
