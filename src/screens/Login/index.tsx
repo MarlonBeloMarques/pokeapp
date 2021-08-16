@@ -29,8 +29,6 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
 
   const [loadingScreen, setLoadingScreen] = useState(true);
 
-  const [loggedIn, setloggedIn] = useState(false);
-
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['email'],
@@ -126,11 +124,14 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
     try {
       await GoogleSignin.hasPlayServices();
       const { idToken } = await GoogleSignin.signIn();
-      setloggedIn(true);
 
-      const credential = auth.GoogleAuthProvider.credential(idToken);
-      await auth().signInWithCredential(credential);
-      navigation.navigate('Home', { isGuest: false });
+      if (Platform.OS === 'ios') {
+        const credential = auth.GoogleAuthProvider.credential(idToken);
+        await auth().signInWithCredential(credential);
+        navigation.navigate('Home', { isGuest: false });
+      } else if (Platform.OS === 'android') {
+        navigation.navigate('Home', { isGuest: false });
+      }
     } catch ({ code }: typeof statusCodes | Error | unknown) {
       if (code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('Cancel');
@@ -139,7 +140,7 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
       } else if (code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log('PLAY_SERVICES_NOT_AVAILABLE');
       } else {
-        console.log('Other error');
+        console.log('Other error: ', code);
       }
     }
   };

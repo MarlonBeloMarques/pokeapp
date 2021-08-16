@@ -202,6 +202,10 @@ dependencies {
     implementation project(path: ":@react-native-firebase_analytics")
     implementation project(path: ":@react-native-firebase_crashlytics")
     implementation project(path: ":@react-native-firebase_auth")
+    implementation project(path: ':@react-native-google-signin_google-signin')
+    implementation project(path: ':@invertase_react-native-apple-authentication')
+    implementation project(path: ':@react-native-community_async-storage')
+    implementation project(path: ':react-native-code-push')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
