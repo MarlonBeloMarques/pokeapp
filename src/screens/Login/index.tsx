@@ -8,7 +8,7 @@ import { darken } from 'polished';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
-import { WEB_CLIENT_ID_GOOGLE } from '@env';
+import { WEB_CLIENT_ID_GOOGLE_ANDROID, WEB_CLIENT_ID_GOOGLE_IOS } from '@env';
 import '../../../config/Reactotron';
 import Login from './Login';
 
@@ -32,7 +32,7 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['email'],
-      webClientId: WEB_CLIENT_ID_GOOGLE,
+      webClientId: Platform.OS === 'ios' ? WEB_CLIENT_ID_GOOGLE_IOS : WEB_CLIENT_ID_GOOGLE_ANDROID,
       offlineAccess: true,
     });
   }, []);
