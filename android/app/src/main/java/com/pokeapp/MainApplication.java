@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.RNAppleAuthentication.AppleAuthenticationAndroidPackage;
 import com.reactnativeimagecolors.ImageColorsPackage;
 import com.surajit.rnrg.RNRadialGradientPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;

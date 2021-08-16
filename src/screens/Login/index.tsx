@@ -150,11 +150,16 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
         appleAuthAndroid.configure({
           clientId: 'your-client-id',
           redirectUri: 'your-redirectUri',
+          scope: appleAuthAndroid.Scope.ALL,
+          state: 'state',
+          responseType: appleAuthAndroid.ResponseType.ALL,
         });
 
         const response = await appleAuthAndroid.signIn();
 
-        console.log(response);
+        if (response) {
+          navigation.navigate('Home', { isGuest: false });
+        }
       } else if (Platform.OS === 'ios') {
         const appleAuthRequestResponse = await appleAuth.performRequest({
           requestedOperation: appleAuth.Operation.LOGIN,
