@@ -1,4 +1,4 @@
-package com.pokeapp;
+package com.marlonmarques.pokeapp;
 
 import android.content.Intent;
 import android.os.Bundle;

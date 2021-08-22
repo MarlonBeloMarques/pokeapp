@@ -1,4 +1,4 @@
-package com.pokeapp;
+package com.marlonmarques.pokeapp;
 
 import com.facebook.react.ReactActivity;
 
