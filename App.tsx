@@ -13,6 +13,7 @@ import SplashScreen from 'react-native-splash-screen';
 import crashlytics from '@react-native-firebase/crashlytics';
 import codePush, { CodePushOptions } from 'react-native-code-push';
 import ToastMessage from 'react-native-flash-message';
+import { StatusBar } from 'react-native';
 import CodePushVerification from './CodePush';
 import { Block } from './src/elements';
 import Routes from './src/routes';
@@ -27,6 +28,7 @@ const App = () => {
 
   return (
     <Block>
+      <StatusBar translucent backgroundColor="transparent" />
       <CodePushVerification />
       <ToastMessage position="top" />
       <Routes />

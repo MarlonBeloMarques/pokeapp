@@ -42,7 +42,7 @@ const PokemonList: React.FC<Props> = ({ pokemonsList, checkScroll, onEndReached 
             <Photo
               source={item.image || item.image_url}
               resizeMode="contain"
-              style={{ minWidth: width / 1.4, flex: 1 }}
+              style={{ minWidth: (width * height) / (width * 3), flex: 1 }}
             />
           </Block>
         )}

@@ -2,7 +2,13 @@ import * as React from 'react';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { darken } from 'polished';
-import { Animated, ImageURISource, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import {
+  Animated,
+  ImageURISource,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+} from 'react-native';
 import { POKEAPI_IMAGE_URL, POKEAPI_URL } from '@env';
 import ImageColors from 'react-native-image-colors';
 import queryString from 'query-string';
@@ -27,6 +33,7 @@ import {
   PokemonsPageSchema,
   TypeSchema,
 } from '../../schemas';
+import { theme } from '../../constants';
 
 const guestProfile: ImageURISource = require('../../assets/images/guest_profile.png');
 const profile: ImageURISource = require('../../assets/images/profile.png');
@@ -89,7 +96,11 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Block center middle>
+        <Block
+          center
+          middle
+          style={{ paddingRight: Platform.OS === 'android' ? theme.sizes.base : 0 }}
+        >
           <Photo source={getProfileImage()} avatar />
         </Block>
       ),
@@ -102,8 +113,12 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   }, []);
 
   const onAuthStateChanged = (user: any) => {
-    const { photoUrl } = user;
-    setUserProfile(photoUrl);
+    if (!isGuest && user) {
+      const { photoURL } = user;
+      if (photoURL) {
+        setUserProfile(photoURL);
+      }
+    }
   };
 
   useEffect(() => {
@@ -391,8 +406,8 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
         return [colorImage.background, darken(0.3, colorImage.background)];
       }
 
-      return colorImage.average
-        ? [colorImage.average, darken(0.3, colorImage.average)]
+      return colorImage.dominant
+        ? [colorImage.dominant, darken(0.3, colorImage.dominant)]
         : colorsDefault;
     }
 
@@ -402,8 +417,11 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   const checkScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const totalLength = event.nativeEvent.contentSize.width;
     const traveledLength = event.nativeEvent.contentOffset.x;
+    const addLengthTraveled = 50;
 
-    const pokemonIndex = Math.floor((traveledLength * pokemonsList.length) / totalLength);
+    const pokemonIndex = Math.floor(
+      ((traveledLength + addLengthTraveled) * pokemonsList.length) / totalLength,
+    );
 
     const findPokemonIndex = pokemonsList.findIndex(
       (pokemon) => pokemon.name === currentPokemon?.name,
