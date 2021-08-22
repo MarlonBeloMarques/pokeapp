@@ -113,9 +113,11 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
   }, []);
 
   const onAuthStateChanged = (user: any) => {
-    if (!isGuest) {
-      const { photoUrl } = user;
-      setUserProfile(photoUrl);
+    if (!isGuest && user) {
+      const { photoURL } = user;
+      if (photoURL) {
+        setUserProfile(photoURL);
+      }
     }
   };
 
