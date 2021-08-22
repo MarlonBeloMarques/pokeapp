@@ -29,6 +29,7 @@ This README will cover a little about the main tools used as well as running Pok
 * Prerequisites
 * Configuration
 * Build
+* Deploy
 * Contact
 
 ----
@@ -81,8 +82,24 @@ With this key, you should add your configuration in firebase console. Now yes!
 
 Reinforcing what was done during the prerequisites, you should be able to configure your project without any problems.
 
+## Build
+
+To run the project in your environment, just do the following:
+````
+yarn
+````
+- To download dependencies
+
+Depending on the platform you want to test, just run according to the name of the platform, in the case of android you must first open the emulator.
+````
+yarn android
+````
+````
+yarn ios
+````
 ## Deploy
 
+### Fastlane
 To make the construction and distribution, through the fast lane became easier. If you passed the prerequisites. must have seen something about *[fastlane match](https://docs.fastlane.tools/actions/match/)* and also *[fastlane supply](https://docs.fastlane.tools/actions/supply/)*.
 
 For everything to work out, it is very important that you configure these steps, so that everything works out both on android and ios.
@@ -112,6 +129,14 @@ Push a new release build to the App Store
 fastlane ios beta
 ````
 Push a new beta build to TestFlight
+
+### CodePush
+
+Now if you just want to push up a quick code level change with CodePush, that's no mystery. If you configured for Android or IOS. Just run the code according to the version and platform set.
+
+````
+appcenter codepush release-react -t "1.0.0" Production
+````
 
 ## Contact
 
