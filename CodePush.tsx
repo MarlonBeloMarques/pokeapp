@@ -46,7 +46,7 @@ const CodePush: React.FC = () => {
     syncCodeFromCodePush();
   }, []);
 
-  return null;
+  return <></>;
 };
 
 export default CodePush;
