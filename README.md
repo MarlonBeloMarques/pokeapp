@@ -80,6 +80,14 @@ With this key, you should add your configuration in firebase console. Now yes!
 - Still in `GoogleService-Info.plist`, get the key **REVERSED_CLIENT_ID** and add it to `Info.plist` in the **URL Types** area, in the **URL Schemes** field.
 - With the CodePush key in hand, add inside your `Info.plist` a new key named **CodePushDeploymentKey** and the key you got.
 
+One hint, if you want to see the data stored in the database, download the [Realm for Desktop](https://docs.mongodb.com/realm-legacy/products/realm-studio/index.html) to get access the route from your database, you will need to access the Home screen in the app, after Login. In the LOG's you must observe the access route to your database. So just run it on your terminal, for example:
+
+```bash
+open /Users/marlonmarques/Library/Developer/CoreSimulator/Devices/6953DC7D-B154-4996-9475-B545537AB84A/data/Containers/Data/Application/7A3BFF9F-76C0-4A30-9F7A-45DFDF4AF707/Documents/default.realm
+```
+
+- Only valid for IOS, for android it will need a searched google 🧐.
+
 Reinforcing what was done during the prerequisites, you should be able to configure your project without any problems.
 
 ## Build
