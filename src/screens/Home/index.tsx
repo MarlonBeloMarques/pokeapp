@@ -171,7 +171,7 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
     setTimeout(() => {
       loadPokemons(pokemons, pokemons[0].page.next);
       setPageCount(pageCount + 1);
-    }, 6000);
+    }, 3000);
   };
 
   const getPokemonsFromPokeApi = async (): Promise<Array<PokemonProps>> => {

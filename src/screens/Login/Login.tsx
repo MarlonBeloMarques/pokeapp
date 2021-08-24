@@ -104,7 +104,7 @@ const Login: React.FC<Props> = ({
             <Photo
               source={urlImage}
               resizeMode="contain"
-              style={{ maxWidth: (width * height) / (width * 3) }}
+              style={{ maxWidth: (width * height) / (width * 2.8) }}
             />
           </Block>
         </Block>
