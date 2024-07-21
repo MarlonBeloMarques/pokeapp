@@ -126,7 +126,7 @@
       "node_modules/(?!@react-native|react-native)(?!rn-fetch-blob)"
     ],
     "moduleNameMapper": {
-      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy",
+      ".+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy",
       "^@env(.*)$": "<rootDir>/.env.development"
     },
     "setupFiles": [

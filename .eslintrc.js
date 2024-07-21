@@ -55,7 +55,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 0,
     camelcase: 'off',
     'no-console': 'off',
-    "no-param-reassign": 'off'
+    'no-param-reassign': 'off',
   },
   settings: {
     'import/resolver': {

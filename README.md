@@ -14,7 +14,7 @@ PokeApp
 
 Get access to a huge list of pokemons with images and characteristics and the best thing is, after loading the pokemons you don't need internet anymore to see your pokemons.
 
-----
+---
 
 <p align="center">
     <img src="./readme/images/login.png" width="225" height="487" />
@@ -22,34 +22,36 @@ Get access to a huge list of pokemons with images and characteristics and the be
     <img src="./readme/images/home_blastoise.png" width="225" height="487" />
 </p>
 
-----
+---
 
 This README will cover a little about the main tools used as well as running PokeApp locally.
 
-* Prerequisites
-* Configuration
-* Build
-* Deploy
-* Contact
+- Prerequisites
+- Configuration
+- Build
+- Deploy
+- Contact
 
-----
+---
+
 ## Prerequisites
 
-If you have no idea how to install React Native and run it locally, check this *[Get started](https://archive.reactnative.dev/docs/getting-started)*.
+If you have no idea how to install React Native and run it locally, check this _[Get started](https://archive.reactnative.dev/docs/getting-started)_.
 
 ### Firebase
 
-PokeApp uses Firebase Analytics, Crashlytics and Auth, if you have no idea how to create a Firebase account and configure it, *[Start here](https://rnfirebase.io/)*.
+PokeApp uses Firebase Analytics, Crashlytics and Auth, if you have no idea how to create a Firebase account and configure it, _[Start here](https://rnfirebase.io/)_.
 
 ### CodePush
 
-For you to configure Code Push you will need to create an account and configure your environment, to help you, you can *[Start here](https://docs.microsoft.com/en-us/appcenter/distribution/codepush/)*.
+For you to configure Code Push you will need to create an account and configure your environment, to help you, you can _[Start here](https://docs.microsoft.com/en-us/appcenter/distribution/codepush/)_.
 
 ### Fastlane
 
-To make the publishing and authoring process easier, you will need to set up your environment, check *[these steps](https://www.cloudbees.com/blog/react-native-developer-series-ios-and-android-fastlane-setup-and-certificates)*.
+To make the publishing and authoring process easier, you will need to set up your environment, check _[these steps](https://www.cloudbees.com/blog/react-native-developer-series-ios-and-android-fastlane-setup-and-certificates)_.
 
 ## Configuration
+
 #### If you've gone through the prerequisites phase, then it's almost all ready, we just need to reinforce that it's all set up.
 
 After creating project in firebase console, make sure you have added authentication with google and apple.
@@ -59,9 +61,11 @@ After creating project in firebase console, make sure you have added authenticat
 Before configuring your environment, you must have configured your project in firebase console for android, if you did, for android in specific you need to add a HASH key in your configuration in firebase to be able to login.
 
 Navigate to the project root and run:
-````
+
+```
 cd android && ./gradlew signingReport
-````
+```
+
 This will generate the application's signing certificate.
 
 Make sure you are copying SHA1 from Task **:app:signingReporte** not from any other Task.
@@ -93,58 +97,70 @@ Reinforcing what was done during the prerequisites, you should be able to config
 ## Build
 
 To run the project in your environment, just do the following:
-````
+
+```
 yarn
-````
+```
+
 - To download dependencies
 
 Depending on the platform you want to test, just run according to the name of the platform, in the case of android you must first open the emulator.
-````
+
+```
 yarn android
-````
-````
+```
+
+```
 yarn ios
-````
+```
+
 ## Deploy
 
 ### Fastlane
-To make the construction and distribution, through the fast lane became easier. If you passed the prerequisites. must have seen something about *[fastlane match](https://docs.fastlane.tools/actions/match/)* and also *[fastlane supply](https://docs.fastlane.tools/actions/supply/)*.
+
+To make the construction and distribution, through the fast lane became easier. If you passed the prerequisites. must have seen something about _[fastlane match](https://docs.fastlane.tools/actions/match/)_ and also _[fastlane supply](https://docs.fastlane.tools/actions/supply/)_.
 
 For everything to work out, it is very important that you configure these steps, so that everything works out both on android and ios.
 
 ### Android
 
 You can use the traditional way to build PokeApp or run the following command:
-````
+
+```
 fastlane android deploy
-````
+```
+
 Deploy a new version to the Google Play
 
-````
+```
 fastlane android beta
-````
+```
+
 Submit a new Beta Build to Crashlytics Beta
 
 ### IOS
 
 You can use the traditional way to build PokeApp or run the following command:
-````
+
+```
 fastlane ios release
-````
+```
+
 Push a new release build to the App Store
 
-````
+```
 fastlane ios beta
-````
+```
+
 Push a new beta build to TestFlight
 
 ### CodePush
 
 Now if you just want to push up a quick code level change with CodePush, that's no mystery. If you configured for Android or IOS. Just run the code according to the version and platform set.
 
-````
+```
 appcenter codepush release-react -t "1.0.0" Production
-````
+```
 
 ## Contact
 

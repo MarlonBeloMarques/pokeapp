@@ -1,3 +1,4 @@
 babel.config.js
 .eslintrc.js
 index.js
+metro.config.js
