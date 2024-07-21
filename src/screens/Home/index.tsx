@@ -206,7 +206,7 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
       }
     } catch (error) {
       console.log(error);
-      crashlytics().recordError(error);
+      crashlytics().recordError(error as Error);
     }
 
     return newPokemonsList;
@@ -378,7 +378,8 @@ const HomeContainer: React.FC<Props> = ({ route, navigation }) => {
 
   const getId = (result: Result): string => result.url.split('/')[6];
   const getAbilityId = (abilityUrl: string): string => abilityUrl.split('/')[6];
-  const getImageUrl = (pokemonId: number): string => `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
+  const getImageUrl = (pokemonId: number): string =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`; // `${POKEAPI_IMAGE_URL}/${pokemonId}.png`;
 
   const getImageColors = async (
     pokemon: PokemonProps,
