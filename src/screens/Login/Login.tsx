@@ -25,6 +25,7 @@ interface Props {
   currentColor: IOSImageColors | AndroidImageColors | undefined;
   loadingProgress: Animated.Value;
   opacityProgress: Animated.Value;
+  signInWithAppleEnabled: boolean;
 }
 
 const Login: React.FC<Props> = ({
@@ -39,6 +40,7 @@ const Login: React.FC<Props> = ({
   loadingFinished,
   opacityProgress,
   currentColor,
+  signInWithAppleEnabled,
 }) => {
   const socialButtons = (): React.ReactElement => (
     <Block
@@ -58,14 +60,16 @@ const Login: React.FC<Props> = ({
           </Text>
         </Block>
       </Button>
-      <Button color="apple" onPress={() => signInApple()}>
-        <Block row center space="evenly">
-          <Icon name="apple1" color={theme.colors.white} size={22} />
-          <Text center bold>
-            Sign in with Apple
-          </Text>
-        </Block>
-      </Button>
+      {signInWithAppleEnabled && (
+        <Button testID="sign_in_with_apple_id" color="apple" onPress={() => signInApple()}>
+          <Block row center space="evenly">
+            <Icon name="apple1" color={theme.colors.white} size={22} />
+            <Text center bold>
+              Sign in with Apple
+            </Text>
+          </Block>
+        </Button>
+      )}
       <Button color="google" onPress={() => signInGoogle()}>
         <Block row center space="evenly">
           <Icon name="google" color={theme.colors.gray} size={22} />

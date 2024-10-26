@@ -13,6 +13,7 @@ interface Props {
   radius?: number | undefined;
   disableRadiusDefault?: boolean | undefined;
   onPress?: ((event: GestureResponderEvent) => void) | undefined | undefined;
+  testID?: string;
 }
 
 const Button: React.FC<Props> = ({
@@ -24,6 +25,7 @@ const Button: React.FC<Props> = ({
   radius,
   disableRadiusDefault,
   onPress,
+  testID,
 }) => {
   const buttonStyles = [
     disableRadiusDefault ? { borderRadius: radius } : { borderRadius: theme.sizes.radius },
@@ -35,7 +37,12 @@ const Button: React.FC<Props> = ({
   ];
 
   return (
-    <TouchableOpacity style={buttonStyles} activeOpacity={opacity || 0.8} onPress={onPress}>
+    <TouchableOpacity
+      testID={testID}
+      style={buttonStyles}
+      activeOpacity={opacity || 0.8}
+      onPress={onPress}
+    >
       {children}
     </TouchableOpacity>
   );
