@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, Platform } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
@@ -132,6 +132,8 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
       } else if (Platform.OS === 'android') {
         navigation.navigate('Home', { isGuest: false });
       }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
     } catch ({ code }: typeof statusCodes | Error | unknown) {
       if (code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('Cancel');
@@ -192,6 +194,8 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
           // handle this - retry?
         }
       }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
     } catch ({ code }: typeof appleAuth.Error | Error | unknown) {
       if (code === appleAuth.Error.CANCELED) {
         console.warn('User canceled Apple Sign in.');
@@ -199,6 +203,12 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
         console.error(code);
       }
     }
+  };
+
+  const signInWithAppleEnabled = () => {
+    if (Platform.OS === 'ios') return true;
+
+    return false;
   };
 
   return (
@@ -215,6 +225,7 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
       currentColor={currentColor}
       loadingProgress={loadingProgress}
       opacityProgress={opacityProgress}
+      signInWithAppleEnabled={signInWithAppleEnabled()}
     />
   );
 };
