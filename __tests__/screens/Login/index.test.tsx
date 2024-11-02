@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -16,7 +17,7 @@ jest.mock('@react-native-google-signin/google-signin', () => ({
   GoogleSignin: {
     configure: () => {},
     hasPlayServices: jest.fn(),
-    signIn: jest.fn(),
+    signIn: jest.fn().mockReturnValue(Promise.resolve({ idToken: 'any_id_token' })),
   },
 }));
 
@@ -71,7 +72,7 @@ describe('Login: Presenter', () => {
     expect(view.props.signInWithAppleEnabled).toEqual(false);
   });
 
-  test('must call the hasPlayServices and signIn from GoggleSignIn when calling signInGoogle function', async () => {
+  test('must call the hasPlayServices and signIn from GoogleSignIn when calling signInGoogle function', async () => {
     const { UNSAFE_getByType } = render(
       <LoginContainer pokemons={[]} navigation={{} as StackNavigationProp<any, any>} />,
     );
@@ -82,5 +83,28 @@ describe('Login: Presenter', () => {
 
     expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
     expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
+  });
+
+  test('must navigate to Home correctly when calling signInGoogle function with Platform like android', async () => {
+    Object.defineProperty(Platform, 'OS', {
+      configurable: true,
+      get: jest.fn(() => 'android'),
+    });
+
+    const navigation = {
+      navigate: jest.fn(),
+    } as unknown as StackNavigationProp<any, any>;
+
+    const { UNSAFE_getByType } = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+
+    const view = UNSAFE_getByType(Login);
+
+    await view.props.signInGoogle();
+
+    expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
+    expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
+
+    expect(navigation.navigate).toHaveBeenCalledTimes(1);
+    expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
   });
 });
