@@ -2,6 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Platform } from 'react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import LoginContainer from '../../../src/screens/Login';
 import Login from '../../../src/screens/Login/Login';
 
@@ -14,6 +15,8 @@ jest.mock('@react-native-google-signin/google-signin', () => ({
   },
   GoogleSignin: {
     configure: () => {},
+    hasPlayServices: jest.fn(),
+    signIn: jest.fn(),
   },
 }));
 
@@ -66,5 +69,18 @@ describe('Login: Presenter', () => {
     const view = UNSAFE_getByType(Login);
 
     expect(view.props.signInWithAppleEnabled).toEqual(false);
+  });
+
+  test('must call the hasPlayServices and signIn from GoggleSignIn when calling signInGoogle function', async () => {
+    const { UNSAFE_getByType } = render(
+      <LoginContainer pokemons={[]} navigation={{} as StackNavigationProp<any, any>} />,
+    );
+
+    const view = UNSAFE_getByType(Login);
+
+    await view.props.signInGoogle();
+
+    expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
+    expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
   });
 });
