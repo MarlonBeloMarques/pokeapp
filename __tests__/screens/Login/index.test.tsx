@@ -4,15 +4,38 @@ import { render } from '@testing-library/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Platform } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 import LoginContainer from '../../../src/screens/Login';
 import Login from '../../../src/screens/Login/Login';
+
+jest.mock('@react-native-firebase/auth', () => {
+  const authInstance = {
+    signInWithCredential: jest.fn((_) =>
+      // eslint-disable-next-line prettier/prettier
+      Promise.resolve({ user: { id: 'fakeUserId', email: 'fakeUser@example.com' } }),
+    ),
+  };
+
+  const GoogleAuthProvider = {
+    credential: jest.fn((idToken) => ({ token: idToken })),
+  };
+
+  const authMock = jest.fn(() => authInstance) as unknown as jest.MockedFunction<
+    () => typeof authInstance
+  > & {
+    GoogleAuthProvider: typeof GoogleAuthProvider;
+  };
+
+  authMock.GoogleAuthProvider = GoogleAuthProvider;
+
+  return authMock;
+});
 
 jest.mock('@react-native-community/async-storage', () => {});
 
 jest.mock('@react-native-google-signin/google-signin', () => ({
   statusCodes: {
     SIGN_IN_CANCELLED: 'sign_in_cancelled',
-    // Adicione outras propriedades que seu código usa
   },
   GoogleSignin: {
     configure: () => {},
@@ -22,15 +45,13 @@ jest.mock('@react-native-google-signin/google-signin', () => ({
 }));
 
 jest.mock('@invertase/react-native-apple-authentication', () => ({
-  __esModule: true, // Garante que a exportação do módulo seja considerada como ESModule
+  __esModule: true,
   default: {
     performRequest: jest.fn(),
     onCredentialRevoked: jest.fn(),
-    // Adicione outros métodos/propriedades de appleAuth conforme necessário
   },
   appleAuthAndroid: {
     signIn: jest.fn(),
-    // Adicione outros métodos/propriedades de appleAuthAndroid conforme necessário
   },
 }));
 
@@ -103,6 +124,30 @@ describe('Login: Presenter', () => {
 
     expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
     expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
+
+    expect(navigation.navigate).toHaveBeenCalledTimes(1);
+    expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
+  });
+
+  test('must navigate to Home correctly when calling signInGoogle function with Platform like iOS', async () => {
+    const navigation = {
+      navigate: jest.fn(),
+    } as unknown as StackNavigationProp<any, any>;
+
+    const { UNSAFE_getByType } = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+
+    const view = UNSAFE_getByType(Login);
+
+    await view.props.signInGoogle();
+
+    expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
+    expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
+
+    expect(auth.GoogleAuthProvider.credential).toHaveBeenCalledTimes(1);
+    expect(auth.GoogleAuthProvider.credential).toHaveBeenCalledWith('any_id_token');
+
+    expect(auth().signInWithCredential).toHaveBeenCalledTimes(1);
+    expect(auth().signInWithCredential).toHaveBeenCalledWith({ token: 'any_id_token' });
 
     expect(navigation.navigate).toHaveBeenCalledTimes(1);
     expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
