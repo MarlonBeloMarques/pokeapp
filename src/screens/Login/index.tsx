@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Animated, Platform } from 'react-native';
+import { Alert, Animated, Platform } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -136,13 +136,13 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
       // @ts-ignore
     } catch ({ code }: typeof statusCodes | Error | unknown) {
       if (code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('Cancel');
+        Alert.alert('O signIn com Google foi cancelado');
       } else if (code === statusCodes.IN_PROGRESS) {
-        console.log('Signin in progress');
+        Alert.alert('O signIn com Google está em processo');
       } else if (code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('PLAY_SERVICES_NOT_AVAILABLE');
+        Alert.alert('Ocorreu um erro ao realizar o signIn com Google');
       } else {
-        console.log('Other error: ', code);
+        Alert.alert('Ocorreu um erro ao realizar o signIn com Google');
       }
     }
   };

@@ -2,18 +2,15 @@
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Platform } from 'react-native';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { Alert, Platform } from 'react-native';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import LoginContainer from '../../../src/screens/Login';
 import Login from '../../../src/screens/Login/Login';
 
 jest.mock('@react-native-firebase/auth', () => {
   const authInstance = {
-    signInWithCredential: jest.fn((_) =>
-      // eslint-disable-next-line prettier/prettier
-      Promise.resolve({ user: { id: 'fakeUserId', email: 'fakeUser@example.com' } }),
-    ),
+    signInWithCredential: jest.fn(() => Promise.resolve({})),
   };
 
   const GoogleAuthProvider = {
@@ -152,4 +149,61 @@ describe('Login: Presenter', () => {
     expect(navigation.navigate).toHaveBeenCalledTimes(1);
     expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
   });
+
+  test.each([
+    {
+      code: 'sign_in_cancelled',
+      message: 'O signIn com Google foi cancelado',
+    },
+    {
+      code: 'unexpected_error',
+      message: 'Ocorreu um erro ao realizar o signIn com Google',
+    },
+    {
+      code: statusCodes.IN_PROGRESS,
+      message: 'O signIn com Google está em processo',
+    },
+    {
+      code: 'play_services_not_available',
+      message: 'Ocorreu um erro ao realizar o signIn com Google',
+    },
+  ])(
+    'should call alert from Alert when hasPlayServices from GoogleSignIn return exception',
+    async (statusCodeError) => {
+      (GoogleSignin.hasPlayServices as jest.Mock).mockImplementationOnce(() => {
+        throw new GoogleSignInError(
+          'google sign in error',
+          'Ocorreu um erro',
+          '',
+          statusCodeError.code,
+        );
+      });
+
+      const alertSpy = jest.spyOn(Alert, 'alert');
+      const navigation = {
+        navigate: jest.fn(),
+      } as unknown as StackNavigationProp<any, any>;
+
+      const { UNSAFE_getByType } = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+
+      const view = UNSAFE_getByType(Login);
+
+      await view.props.signInGoogle();
+
+      expect(alertSpy).toHaveBeenCalledTimes(1);
+      expect(alertSpy).toHaveBeenCalledWith(statusCodeError.message);
+    },
+  );
 });
+
+class GoogleSignInError extends Error {
+  code? = '';
+
+  constructor(name: string, message: string, stack?: string, code?: string) {
+    super();
+    this.name = name;
+    this.message = message;
+    this.stack = stack;
+    this.code = code;
+  }
+}
