@@ -67,9 +67,9 @@ describe('Login: Presenter', () => {
   });
 
   test('should the signInWithAppleEnabled return true if Platform is equal to iOS', () => {
-    const { UNSAFE_getByType } = render(
-      <LoginContainer pokemons={[]} navigation={{} as StackNavigationProp<any, any>} />,
-    );
+    const {
+      sut: { UNSAFE_getByType },
+    } = makeSut();
 
     const view = UNSAFE_getByType(Login);
 
@@ -77,13 +77,10 @@ describe('Login: Presenter', () => {
   });
 
   test('should the signInWithAppleEnabled return false if Platform is different to iOS', () => {
-    Object.defineProperty(Platform, 'OS', {
-      configurable: true,
-      get: jest.fn(() => 'android'),
-    });
-    const { UNSAFE_getByType } = render(
-      <LoginContainer pokemons={[]} navigation={{} as StackNavigationProp<any, any>} />,
-    );
+    setPlatformToAndroid();
+    const {
+      sut: { UNSAFE_getByType },
+    } = makeSut();
 
     const view = UNSAFE_getByType(Login);
 
@@ -91,9 +88,9 @@ describe('Login: Presenter', () => {
   });
 
   test('must call the hasPlayServices and signIn from GoogleSignIn when calling signInGoogle function', async () => {
-    const { UNSAFE_getByType } = render(
-      <LoginContainer pokemons={[]} navigation={{} as StackNavigationProp<any, any>} />,
-    );
+    const {
+      sut: { UNSAFE_getByType },
+    } = makeSut();
 
     const view = UNSAFE_getByType(Login);
 
@@ -104,16 +101,12 @@ describe('Login: Presenter', () => {
   });
 
   test('must navigate to Home correctly when calling signInGoogle function with Platform like android', async () => {
-    Object.defineProperty(Platform, 'OS', {
-      configurable: true,
-      get: jest.fn(() => 'android'),
-    });
+    setPlatformToAndroid();
 
-    const navigation = {
-      navigate: jest.fn(),
-    } as unknown as StackNavigationProp<any, any>;
-
-    const { UNSAFE_getByType } = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+    const {
+      sut: { UNSAFE_getByType },
+      navigation,
+    } = makeSut();
 
     const view = UNSAFE_getByType(Login);
 
@@ -127,11 +120,10 @@ describe('Login: Presenter', () => {
   });
 
   test('must navigate to Home correctly when calling signInGoogle function with Platform like iOS', async () => {
-    const navigation = {
-      navigate: jest.fn(),
-    } as unknown as StackNavigationProp<any, any>;
-
-    const { UNSAFE_getByType } = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+    const {
+      sut: { UNSAFE_getByType },
+      navigation,
+    } = makeSut();
 
     const view = UNSAFE_getByType(Login);
 
@@ -170,21 +162,12 @@ describe('Login: Presenter', () => {
   ])(
     'should call alert from Alert when hasPlayServices from GoogleSignIn return exception',
     async (statusCodeError) => {
-      (GoogleSignin.hasPlayServices as jest.Mock).mockImplementationOnce(() => {
-        throw new GoogleSignInError(
-          'google sign in error',
-          'Ocorreu um erro',
-          '',
-          statusCodeError.code,
-        );
-      });
-
+      hasPlayServicesMock(statusCodeError.code);
       const alertSpy = jest.spyOn(Alert, 'alert');
-      const navigation = {
-        navigate: jest.fn(),
-      } as unknown as StackNavigationProp<any, any>;
 
-      const { UNSAFE_getByType } = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+      const {
+        sut: { UNSAFE_getByType },
+      } = makeSut();
 
       const view = UNSAFE_getByType(Login);
 
@@ -195,6 +178,28 @@ describe('Login: Presenter', () => {
     },
   );
 });
+
+const makeSut = () => {
+  const navigation = {
+    navigate: jest.fn(),
+  } as unknown as StackNavigationProp<any, any>;
+  const sut = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+
+  return { sut, navigation };
+};
+
+const hasPlayServicesMock = (code: string) => {
+  (GoogleSignin.hasPlayServices as jest.Mock).mockImplementationOnce(() => {
+    throw new GoogleSignInError('google sign in error', 'Ocorreu um erro', '', code);
+  });
+};
+
+const setPlatformToAndroid = () => {
+  Object.defineProperty(Platform, 'OS', {
+    configurable: true,
+    get: jest.fn(() => 'android'),
+  });
+};
 
 class GoogleSignInError extends Error {
   code? = '';
