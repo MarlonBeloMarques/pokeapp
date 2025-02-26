@@ -150,5 +150,5 @@ appcenter codepush release-react -t "1.0.0" Production
 
 You still have any doubts, or need to talk to me, you can find me here:
 
-- Instagram: [@marlomarquesbr](https://www.instagram.com/marlonmarqsbr/)
+- Instagram: [@marlonbelomarques](https://www.instagram.com/marlonbelomarques/)
 - Linkedin: [Marlon Marques](https://www.linkedin.com/in/marlon-marques-0b509813b/)
