@@ -63,7 +63,7 @@
     "@babel/runtime": "^7.14.5",
     "@react-native-community/eslint-config": "^2.0.0",
     "@testing-library/jest-native": "^4.0.2",
-    "@testing-library/react-native": "^7.2.0",
+    "@testing-library/react-native": "^12.8.0",
     "@types/jest": "^26.0.24",
     "@types/react-native": "^0.64.5",
     "@types/react-native-vector-icons": "^6.4.7",
@@ -126,7 +126,7 @@
       "node_modules/(?!@react-native|react-native)(?!rn-fetch-blob)"
     ],
     "moduleNameMapper": {
-      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy",
+      ".+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy",
       "^@env(.*)$": "<rootDir>/.env.development"
     },
     "setupFiles": [

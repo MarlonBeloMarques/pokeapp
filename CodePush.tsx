@@ -21,7 +21,7 @@ const CodePush: React.FC = () => {
           break;
       }
     } catch (error) {
-      crashlytics.recordError(error);
+      crashlytics().recordError(error as Error);
     }
   };
 
@@ -39,7 +39,7 @@ const CodePush: React.FC = () => {
         () => console.warn('Outdated app.'), // HandleBinaryVersionMismatchCallback
       );
     } catch (error) {
-      crashlytics.recordError(error);
+      crashlytics().recordError(error as Error);
     }
   };
   useEffect(() => {

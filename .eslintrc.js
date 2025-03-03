@@ -32,6 +32,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
     'react/display-name': 'off',
 
     'implicit-arrow-linebreak': 'off',
@@ -55,7 +56,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 0,
     camelcase: 'off',
     'no-console': 'off',
-    "no-param-reassign": 'off'
+    'no-param-reassign': 'off',
   },
   settings: {
     'import/resolver': {

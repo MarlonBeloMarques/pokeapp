@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, Platform } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { darken } from 'polished';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import { WEB_CLIENT_ID_GOOGLE_ANDROID, WEB_CLIENT_ID_GOOGLE_IOS } from '@env';
 import '../../../config/Reactotron';
 import Login from './Login';
+import signInGoogleService from './services/signInGoogle';
 
 const minutes = 10000;
 
@@ -121,28 +122,11 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
   };
 
   const signInGoogle = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
+    const complete = () => {
+      navigation.navigate('Home', { isGuest: false });
+    };
 
-      if (Platform.OS === 'ios') {
-        const credential = auth.GoogleAuthProvider.credential(idToken);
-        await auth().signInWithCredential(credential);
-        navigation.navigate('Home', { isGuest: false });
-      } else if (Platform.OS === 'android') {
-        navigation.navigate('Home', { isGuest: false });
-      }
-    } catch ({ code }: typeof statusCodes | Error | unknown) {
-      if (code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('Cancel');
-      } else if (code === statusCodes.IN_PROGRESS) {
-        console.log('Signin in progress');
-      } else if (code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('PLAY_SERVICES_NOT_AVAILABLE');
-      } else {
-        console.log('Other error: ', code);
-      }
-    }
+    await signInGoogleService(complete);
   };
 
   const signInApple = async () => {
@@ -192,6 +176,8 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
           // handle this - retry?
         }
       }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
     } catch ({ code }: typeof appleAuth.Error | Error | unknown) {
       if (code === appleAuth.Error.CANCELED) {
         console.warn('User canceled Apple Sign in.');
@@ -199,6 +185,12 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
         console.error(code);
       }
     }
+  };
+
+  const signInWithAppleEnabled = () => {
+    if (Platform.OS === 'ios') return true;
+
+    return false;
   };
 
   return (
@@ -215,6 +207,7 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
       currentColor={currentColor}
       loadingProgress={loadingProgress}
       opacityProgress={opacityProgress}
+      signInWithAppleEnabled={signInWithAppleEnabled()}
     />
   );
 };

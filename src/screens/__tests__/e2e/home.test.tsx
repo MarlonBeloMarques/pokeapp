@@ -1,14 +1,7 @@
 import * as React from 'react';
 import renderer from 'react-test-renderer';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import {
-  Animated,
-  FlatList,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Text,
-  View,
-} from 'react-native';
+import { Animated, NativeScrollEvent, NativeSyntheticEvent, Text } from 'react-native';
 import { ImageColorsResult } from 'react-native-image-colors/lib/typescript/types';
 import { render, fireEvent } from '@testing-library/react-native';
 import HomeContainer from '../../Home';
