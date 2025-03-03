@@ -11,16 +11,16 @@ import auth from '@react-native-firebase/auth';
 import { WEB_CLIENT_ID_GOOGLE_ANDROID, WEB_CLIENT_ID_GOOGLE_IOS } from '@env';
 import '../../../config/Reactotron';
 import Login from './Login';
-import signInGoogleService from './services/signInGoogle';
 
 const minutes = 10000;
 
 interface Props {
   pokemons: Array<{ id: number; image: string }>;
   navigation: StackNavigationProp<any, any>;
+  signInGoogleService: (complete: () => void) => Promise<void>;
 }
 
-const LoginContainer: React.FC<Props> = ({ pokemons, navigation }) => {
+const LoginContainer: React.FC<Props> = ({ pokemons, navigation, signInGoogleService }) => {
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
