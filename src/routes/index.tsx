@@ -2,11 +2,11 @@ import * as React from 'react';
 import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Platform } from 'react-native';
-import Login from '../screens/Login';
 import Home from '../screens/Home';
 import { theme } from '../constants';
 import { Title } from '../components';
 import { signOut } from './utils';
+import LoginFactory from '../screens/Login/factories/LoginFactory';
 
 const Stack = createStackNavigator();
 
@@ -26,7 +26,7 @@ const Routes = () => (
         },
       }}
     >
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Login" component={LoginFactory} />
       <Stack.Screen
         name="Home"
         component={Home}
