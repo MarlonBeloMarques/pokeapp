@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Platform } from 'react-native';
-import Login from '../screens/Login';
+import Login from '../screens/Login/factories/LoginFactory';
 import Home from '../screens/Home';
 import { theme } from '../constants';
 import { Title } from '../components';

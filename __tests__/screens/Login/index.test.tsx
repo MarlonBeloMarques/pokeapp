@@ -7,6 +7,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import auth from '@react-native-firebase/auth';
 import LoginContainer from '../../../src/screens/Login';
 import Login from '../../../src/screens/Login/Login';
+import LoginFactory from '../../../src/screens/Login/factories/LoginFactory';
 
 jest.mock('@react-native-firebase/auth', () => {
   const authInstance = {
