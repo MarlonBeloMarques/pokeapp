@@ -5,12 +5,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Platform } from 'react-native';
 import LoginContainer from '../../../src/screens/Login';
 import Login from '../../../src/screens/Login/Login';
-import * as signInApple from '../../../src/screens/Login/services/signInApple';
-
-jest.mock('@invertase/react-native-apple-authentication', () => ({
-  __esModule: true,
-  default: {},
-}));
 
 jest.mock('@react-native-community/async-storage', () => {});
 
@@ -90,12 +84,6 @@ describe('Login: Presenter', () => {
   });
 
   test('must navigate to Home correctly when calling signInApple function with Platform like iOS', async () => {
-    jest.spyOn(signInApple, 'default').mockImplementation(
-      (completeWithNavigation: () => void) =>
-        Promise.resolve().then(() => completeWithNavigation()),
-      // eslint-disable-next-line function-paren-newline
-    );
-
     const {
       sut: { UNSAFE_getByType },
       navigation,
@@ -114,6 +102,12 @@ const makeSut = () => {
   const signInGoogleService = async (complete: () => void): Promise<void> => {
     complete();
   };
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const signInAppleService = async (complete: () => void): Promise<void> => {
+    complete();
+  };
+
   const navigation = {
     navigate: jest.fn(),
   } as unknown as StackNavigationProp<any, any>;
@@ -122,6 +116,7 @@ const makeSut = () => {
       pokemons={[]}
       navigation={navigation}
       signInGoogleService={signInGoogleService}
+      signInAppleService={signInAppleService}
     />,
   );
 

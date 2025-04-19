@@ -9,16 +9,21 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { WEB_CLIENT_ID_GOOGLE_ANDROID, WEB_CLIENT_ID_GOOGLE_IOS } from '@env';
 import '../../../config/Reactotron';
 import Login from './Login';
-import signInAppleService from './services/signInApple';
 
 const minutes = 10000;
 interface Props {
   pokemons: Array<{ id: number; image: string }>;
   navigation: StackNavigationProp<any, any>;
   signInGoogleService: (complete: () => void) => Promise<void>;
+  signInAppleService: (complete: () => void) => Promise<void>;
 }
 
-const LoginContainer: React.FC<Props> = ({ pokemons, navigation, signInGoogleService }) => {
+const LoginContainer: React.FC<Props> = ({
+  pokemons,
+  navigation,
+  signInGoogleService,
+  signInAppleService,
+}) => {
   const [previousColor, setPreviousColor] = useState<IOSImageColors | AndroidImageColors>();
   const [currentColor, setCurrentColor] = useState<IOSImageColors | AndroidImageColors>();
   const [urlImage, setUrlImage] = useState('');
