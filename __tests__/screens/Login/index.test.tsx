@@ -3,6 +3,8 @@ import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Platform } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import appleAuth from '@invertase/react-native-apple-authentication';
 import LoginContainer from '../../../src/screens/Login';
 import Login from '../../../src/screens/Login/Login';
 
@@ -15,13 +17,23 @@ jest.mock('@react-native-firebase/auth', () => {
     credential: jest.fn((idToken) => ({ token: idToken })),
   };
 
+  const AppleAuthProvider = {
+    credential: jest.fn((idToken) => ({
+      token: idToken,
+      providerId: 'any_provider_id',
+      secret: 'any_secret',
+    })),
+  };
+
   const authMock = jest.fn(() => authInstance) as unknown as jest.MockedFunction<
     () => typeof authInstance
   > & {
     GoogleAuthProvider: typeof GoogleAuthProvider;
+    AppleAuthProvider: typeof AppleAuthProvider;
   };
 
   authMock.GoogleAuthProvider = GoogleAuthProvider;
+  authMock.AppleAuthProvider = AppleAuthProvider;
 
   return authMock;
 });
@@ -42,8 +54,21 @@ jest.mock('@react-native-google-signin/google-signin', () => ({
 jest.mock('@invertase/react-native-apple-authentication', () => ({
   __esModule: true,
   default: {
-    performRequest: jest.fn(),
+    performRequest: jest.fn().mockReturnValue({
+      identityToken: 'any_identity_token',
+      nonce: 'any_nonce',
+    }),
     onCredentialRevoked: jest.fn(),
+    Error: {
+      CANCELED: 'canceled',
+    },
+    Operation: {
+      LOGIN: 'login',
+    },
+    Scope: {
+      EMAIL: 'email',
+      FULL_NAME: 'full_name',
+    },
   },
   appleAuthAndroid: {
     signIn: jest.fn(),
@@ -112,6 +137,25 @@ describe('Login: Presenter', () => {
     await view.props.signInGoogle();
     expect(navigation.navigate).toHaveBeenCalledTimes(1);
     expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
+  });
+
+  test('should call the signInWithCredential correctly when calling the signInApple function', async () => {
+    const {
+      sut: { UNSAFE_getByType },
+    } = makeSut();
+
+    const view = UNSAFE_getByType(Login);
+
+    await view.props.signInApple();
+
+    expect(appleAuth.performRequest).toHaveBeenCalledTimes(1);
+
+    expect(auth().signInWithCredential).toHaveBeenCalledTimes(1);
+    expect(auth().signInWithCredential).toHaveBeenCalledWith({
+      providerId: 'any_provider_id',
+      token: 'any_identity_token',
+      secret: 'any_secret',
+    });
   });
 });
 

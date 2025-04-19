@@ -6,14 +6,13 @@ import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/li
 import { StackNavigationProp } from '@react-navigation/stack';
 import { darken } from 'polished';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
+import appleAuth from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import { WEB_CLIENT_ID_GOOGLE_ANDROID, WEB_CLIENT_ID_GOOGLE_IOS } from '@env';
 import '../../../config/Reactotron';
 import Login from './Login';
 
 const minutes = 10000;
-
 interface Props {
   pokemons: Array<{ id: number; image: string }>;
   navigation: StackNavigationProp<any, any>;
@@ -131,21 +130,7 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation, signInGoogleSer
 
   const signInApple = async () => {
     try {
-      if (Platform.OS === 'android') {
-        appleAuthAndroid.configure({
-          clientId: 'your-client-id',
-          redirectUri: 'your-redirectUri',
-          scope: appleAuthAndroid.Scope.ALL,
-          state: 'state',
-          responseType: appleAuthAndroid.ResponseType.ALL,
-        });
-
-        const response = await appleAuthAndroid.signIn();
-
-        if (response) {
-          navigation.navigate('Home', { isGuest: false });
-        }
-      } else if (Platform.OS === 'ios') {
+      if (Platform.OS === 'ios') {
         const appleAuthRequestResponse = await appleAuth.performRequest({
           requestedOperation: appleAuth.Operation.LOGIN,
           requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
@@ -165,12 +150,10 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation, signInGoogleSer
           //     in this example `signInWithCredential` is used,
           // but you could also call `linkWithCredential`
           //     to link the account to an existing user
-          const userCredential = await auth().signInWithCredential(appleCredential);
+          await auth().signInWithCredential(appleCredential);
 
           // user is now signed in, any Firebase `onAuthStateChanged`
           // listeners you have will trigger
-          console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`);
-
           navigation.navigate('Home', { isGuest: false });
         } else {
           // handle this - retry?
@@ -181,8 +164,6 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation, signInGoogleSer
     } catch ({ code }: typeof appleAuth.Error | Error | unknown) {
       if (code === appleAuth.Error.CANCELED) {
         console.warn('User canceled Apple Sign in.');
-      } else {
-        console.error(code);
       }
     }
   };
