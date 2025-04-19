@@ -2,9 +2,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Alert, Platform } from 'react-native';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
+import { Platform } from 'react-native';
 import LoginContainer from '../../../src/screens/Login';
 import Login from '../../../src/screens/Login/Login';
 
@@ -87,19 +85,6 @@ describe('Login: Presenter', () => {
     expect(view.props.signInWithAppleEnabled).toEqual(false);
   });
 
-  test('must call the hasPlayServices and signIn from GoogleSignIn when calling signInGoogle function', async () => {
-    const {
-      sut: { UNSAFE_getByType },
-    } = makeSut();
-
-    const view = UNSAFE_getByType(Login);
-
-    await view.props.signInGoogle();
-
-    expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
-    expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
-  });
-
   test('must navigate to Home correctly when calling signInGoogle function with Platform like android', async () => {
     setPlatformToAndroid();
 
@@ -111,9 +96,6 @@ describe('Login: Presenter', () => {
     const view = UNSAFE_getByType(Login);
 
     await view.props.signInGoogle();
-
-    expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
-    expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
 
     expect(navigation.navigate).toHaveBeenCalledTimes(1);
     expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
@@ -128,70 +110,28 @@ describe('Login: Presenter', () => {
     const view = UNSAFE_getByType(Login);
 
     await view.props.signInGoogle();
-
-    expect(GoogleSignin.hasPlayServices).toHaveBeenCalledTimes(1);
-    expect(GoogleSignin.signIn).toHaveBeenCalledTimes(1);
-
-    expect(auth.GoogleAuthProvider.credential).toHaveBeenCalledTimes(1);
-    expect(auth.GoogleAuthProvider.credential).toHaveBeenCalledWith('any_id_token');
-
-    expect(auth().signInWithCredential).toHaveBeenCalledTimes(1);
-    expect(auth().signInWithCredential).toHaveBeenCalledWith({ token: 'any_id_token' });
-
     expect(navigation.navigate).toHaveBeenCalledTimes(1);
     expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
   });
-
-  test.each([
-    {
-      code: 'sign_in_cancelled',
-      message: 'O signIn com Google foi cancelado',
-    },
-    {
-      code: 'unexpected_error',
-      message: 'Ocorreu um erro ao realizar o signIn com Google',
-    },
-    {
-      code: statusCodes.IN_PROGRESS,
-      message: 'O signIn com Google está em processo',
-    },
-    {
-      code: 'play_services_not_available',
-      message: 'Ocorreu um erro ao realizar o signIn com Google',
-    },
-  ])(
-    'should call alert from Alert when hasPlayServices from GoogleSignIn return exception',
-    async (statusCodeError) => {
-      hasPlayServicesMock(statusCodeError.code);
-      const alertSpy = jest.spyOn(Alert, 'alert');
-
-      const {
-        sut: { UNSAFE_getByType },
-      } = makeSut();
-
-      const view = UNSAFE_getByType(Login);
-
-      await view.props.signInGoogle();
-
-      expect(alertSpy).toHaveBeenCalledTimes(1);
-      expect(alertSpy).toHaveBeenCalledWith(statusCodeError.message);
-    },
-  );
 });
 
 const makeSut = () => {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const signInGoogleService = async (complete: () => void): Promise<void> => {
+    complete();
+  };
   const navigation = {
     navigate: jest.fn(),
   } as unknown as StackNavigationProp<any, any>;
-  const sut = render(<LoginContainer pokemons={[]} navigation={navigation} />);
+  const sut = render(
+    <LoginContainer
+      pokemons={[]}
+      navigation={navigation}
+      signInGoogleService={signInGoogleService}
+    />,
+  );
 
   return { sut, navigation };
-};
-
-const hasPlayServicesMock = (code: string) => {
-  (GoogleSignin.hasPlayServices as jest.Mock).mockImplementationOnce(() => {
-    throw new GoogleSignInError('google sign in error', 'Ocorreu um erro', '', code);
-  });
 };
 
 const setPlatformToAndroid = () => {
@@ -200,15 +140,3 @@ const setPlatformToAndroid = () => {
     get: jest.fn(() => 'android'),
   });
 };
-
-class GoogleSignInError extends Error {
-  code? = '';
-
-  constructor(name: string, message: string, stack?: string, code?: string) {
-    super();
-    this.name = name;
-    this.message = message;
-    this.stack = stack;
-    this.code = code;
-  }
-}
