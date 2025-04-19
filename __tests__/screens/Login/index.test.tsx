@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import LoginContainer from '../../../src/screens/Login';
@@ -60,7 +60,7 @@ jest.mock('@invertase/react-native-apple-authentication', () => ({
     }),
     onCredentialRevoked: jest.fn(),
     Error: {
-      CANCELED: 'canceled',
+      CANCELED: '1001',
     },
     Operation: {
       LOGIN: 'login',
@@ -157,6 +157,54 @@ describe('Login: Presenter', () => {
       secret: 'any_secret',
     });
   });
+
+  test('should not call the signInWithCredential when calling the signInApple when identityToken is undefined', async () => {
+    const identityToken = undefined;
+    performRequestMock(identityToken!);
+    const {
+      sut: { UNSAFE_getByType },
+    } = makeSut();
+
+    const view = UNSAFE_getByType(Login);
+
+    await view.props.signInApple();
+
+    expect(appleAuth.performRequest).toHaveBeenCalledTimes(1);
+
+    expect(auth().signInWithCredential).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    {
+      code: '1001',
+      message: 'O signIn com Apple foi cancelado',
+    },
+    {
+      code: '1002',
+      message: 'Ocorreu um erro ao realizar o signIn com Apple',
+    },
+  ])(
+    'should not call the signInWithCredential when calling the signInApple when it throws an error',
+    async (statusCodeError) => {
+      performRequestMockThrowError(statusCodeError.code);
+      const alertSpy = jest.spyOn(Alert, 'alert');
+
+      const {
+        sut: { UNSAFE_getByType },
+      } = makeSut();
+
+      const view = UNSAFE_getByType(Login);
+
+      await view.props.signInApple();
+
+      expect(appleAuth.performRequest).toHaveBeenCalledTimes(1);
+
+      expect(auth().signInWithCredential).not.toHaveBeenCalled();
+
+      expect(alertSpy).toHaveBeenCalledTimes(1);
+      expect(alertSpy).toHaveBeenCalledWith(statusCodeError.message);
+    },
+  );
 });
 
 const makeSut = () => {
@@ -184,3 +232,25 @@ const setPlatformToAndroid = () => {
     get: jest.fn(() => 'android'),
   });
 };
+
+const performRequestMock = (identityToken: string) => {
+  (appleAuth.performRequest as jest.Mock).mockImplementationOnce(() => ({
+    identityToken,
+    nonce: '',
+  }));
+};
+
+const performRequestMockThrowError = (code: string) => {
+  (appleAuth.performRequest as jest.Mock).mockImplementationOnce(() => {
+    throw new AppleSignInError(code);
+  });
+};
+
+class AppleSignInError extends Error {
+  code? = '';
+
+  constructor(code?: string) {
+    super();
+    this.code = code;
+  }
+}

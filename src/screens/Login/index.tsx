@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Animated, Platform } from 'react-native';
+import { Alert, Animated, Platform } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -136,34 +136,27 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation, signInGoogleSer
           requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
         });
 
-        // get current authentication state for user
-        // /!\ This method must be tested on a real device. On the iOS simulator
-        // it always throws an error.
         const { identityToken, nonce } = appleAuthRequestResponse;
 
-        // use credentialState response to ensure the user is authenticated
         if (identityToken) {
-          // 3). create a Firebase `AppleAuthProvider` credential
           const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
 
-          // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
-          //     in this example `signInWithCredential` is used,
-          // but you could also call `linkWithCredential`
-          //     to link the account to an existing user
           await auth().signInWithCredential(appleCredential);
 
           // user is now signed in, any Firebase `onAuthStateChanged`
           // listeners you have will trigger
           navigation.navigate('Home', { isGuest: false });
         } else {
-          // handle this - retry?
+          console.warn('Apple Sign-In failed - no identify token returned');
         }
       }
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } catch ({ code }: typeof appleAuth.Error | Error | unknown) {
       if (code === appleAuth.Error.CANCELED) {
-        console.warn('User canceled Apple Sign in.');
+        Alert.alert('O signIn com Apple foi cancelado');
+      } else {
+        Alert.alert('Ocorreu um erro ao realizar o signIn com Apple');
       }
     }
   };
