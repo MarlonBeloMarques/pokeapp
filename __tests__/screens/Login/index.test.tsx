@@ -205,6 +205,21 @@ describe('Login: Presenter', () => {
       expect(alertSpy).toHaveBeenCalledWith(statusCodeError.message);
     },
   );
+
+  test('must navigate to Home correctly when calling signInApple function with Platform like iOS', async () => {
+    const {
+      sut: { UNSAFE_getByType },
+      navigation,
+    } = makeSut();
+
+    const view = UNSAFE_getByType(Login);
+
+    await view.props.signInApple();
+    expect(appleAuth.performRequest).toHaveBeenCalledTimes(1);
+    expect(auth().signInWithCredential).toHaveBeenCalledTimes(1);
+
+    expect(navigation.navigate).toHaveBeenCalledWith('Home', { isGuest: false });
+  });
 });
 
 const makeSut = () => {
