@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Alert, Animated, Platform } from 'react-native';
+import { Animated, Platform } from 'react-native';
 import ImageColors from 'react-native-image-colors';
 import { AndroidImageColors, IOSImageColors } from 'react-native-image-colors/lib/typescript/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { darken } from 'polished';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import appleAuth from '@invertase/react-native-apple-authentication';
-import auth from '@react-native-firebase/auth';
 import { WEB_CLIENT_ID_GOOGLE_ANDROID, WEB_CLIENT_ID_GOOGLE_IOS } from '@env';
 import '../../../config/Reactotron';
 import Login from './Login';
+import signInAppleService from './services/signInApple';
 
 const minutes = 10000;
 interface Props {
@@ -129,36 +128,11 @@ const LoginContainer: React.FC<Props> = ({ pokemons, navigation, signInGoogleSer
   };
 
   const signInApple = async () => {
-    try {
-      if (Platform.OS === 'ios') {
-        const appleAuthRequestResponse = await appleAuth.performRequest({
-          requestedOperation: appleAuth.Operation.LOGIN,
-          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-        });
+    const complete = () => {
+      navigation.navigate('Home', { isGuest: false });
+    };
 
-        const { identityToken, nonce } = appleAuthRequestResponse;
-
-        if (identityToken) {
-          const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
-
-          await auth().signInWithCredential(appleCredential);
-
-          // user is now signed in, any Firebase `onAuthStateChanged`
-          // listeners you have will trigger
-          navigation.navigate('Home', { isGuest: false });
-        } else {
-          console.warn('Apple Sign-In failed - no identify token returned');
-        }
-      }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-    } catch ({ code }: typeof appleAuth.Error | Error | unknown) {
-      if (code === appleAuth.Error.CANCELED) {
-        Alert.alert('O signIn com Apple foi cancelado');
-      } else {
-        Alert.alert('Ocorreu um erro ao realizar o signIn com Apple');
-      }
-    }
+    await signInAppleService(complete);
   };
 
   const signInWithAppleEnabled = () => {
